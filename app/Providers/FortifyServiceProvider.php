@@ -31,6 +31,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+        $this->configureRedirects();
     }
 
     /**
@@ -86,6 +87,26 @@ class FortifyServiceProvider extends ServiceProvider
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
+        });
+    }
+
+    /**
+     * Configure authentication redirects based on user roles.
+     */
+    private function configureRedirects(): void
+    {
+        Fortify::redirects('login', function () {
+            $user = auth()->user();
+
+            if ($user->hasAnyRole([\App\Enum\UserRoleEnum::SUPER_ADMIN->name, \App\Enum\UserRoleEnum::ADMIN->name])) {
+                return route('dashboard');
+            }
+
+            return redirect()->intended(route('home'));
+        });
+
+        Fortify::redirects('register', function () {
+            return route('home');
         });
     }
 }
