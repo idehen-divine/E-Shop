@@ -1,31 +1,35 @@
-import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import InputError from '@/components/input-error';
 import AppLayout from '@/layouts/app-layout';
+import ShopLayout from '@/layouts/app/shop-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, usePage } from '@inertiajs/react';
 import { useRef } from 'react';
 
 import HeadingSmall from '@/components/heading-small';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/user-password';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Password settings',
-        href: edit().url,
-    },
-];
+import { edit, update } from '@/routes/user-password';
 
 export default function Password() {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
+    const page = usePage<SharedData>();
+    const isAdmin =
+        page.props.auth.user?.roles?.includes('SUPER_ADMIN') ||
+        page.props.auth.user?.roles?.includes('ADMIN');
+    const Layout = isAdmin ? AppLayout : ShopLayout;
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Password settings',
+            href: edit().url,
+        },
+    ];
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <Layout breadcrumbs={breadcrumbs}>
             <Head title="Password settings" />
 
             <SettingsLayout>
@@ -36,7 +40,8 @@ export default function Password() {
                     />
 
                     <Form
-                        {...PasswordController.update.form()}
+                        action={update().url}
+                        method={update().method}
                         options={{
                             preserveScroll: true,
                         }}
@@ -141,6 +146,6 @@ export default function Password() {
                     </Form>
                 </div>
             </SettingsLayout>
-        </AppLayout>
+        </Layout>
     );
 }

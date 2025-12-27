@@ -28,7 +28,7 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
      */
     public function getAllProducts($request)
     {
-        if (!$request->has('per_page')) {
+        if (! $request->has('per_page')) {
             $request->merge(['per_page' => 24]);
         }
 
@@ -36,7 +36,7 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
             $query->with('categories');
 
             if ($request->filled('search')) {
-                $query->where('name', 'like', '%' . $request->search . '%');
+                $query->where('name', 'like', '%'.$request->search.'%');
             }
             if ($request->filled('category')) {
                 $query->whereHas('categories', function ($query) use ($request) {

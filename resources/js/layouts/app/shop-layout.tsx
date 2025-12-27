@@ -6,6 +6,7 @@ import { type PropsWithChildren } from 'react';
 
 export default function ShopLayout({
     children,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     breadcrumbs = [],
 }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
     return (

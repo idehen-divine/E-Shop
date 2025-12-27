@@ -5,10 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
 import AppLayout from '@/layouts/app-layout';
+import ShopLayout from '@/layouts/app/shop-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { disable, enable, show } from '@/routes/two-factor';
-import { type BreadcrumbItem } from '@/types';
-import { Form, Head } from '@inertiajs/react';
+import { type BreadcrumbItem, type SharedData } from '@/types';
+import { Form, Head, usePage } from '@inertiajs/react';
 import { ShieldBan, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 
@@ -17,17 +18,21 @@ interface TwoFactorProps {
     twoFactorEnabled?: boolean;
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Two-Factor Authentication',
-        href: show.url(),
-    },
-];
-
 export default function TwoFactor({
     requiresConfirmation = false,
     twoFactorEnabled = false,
 }: TwoFactorProps) {
+    const page = usePage<SharedData>();
+    const isAdmin =
+        page.props.auth.user?.roles?.includes('SUPER_ADMIN') ||
+        page.props.auth.user?.roles?.includes('ADMIN');
+    const Layout = isAdmin ? AppLayout : ShopLayout;
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Two-Factor Authentication',
+            href: show.url(),
+        },
+    ];
     const {
         qrCodeSvg,
         hasSetupData,
@@ -41,7 +46,7 @@ export default function TwoFactor({
     const [showSetupModal, setShowSetupModal] = useState<boolean>(false);
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <Layout breadcrumbs={breadcrumbs}>
             <Head title="Two-Factor Authentication" />
             <SettingsLayout>
                 <div className="space-y-6">
@@ -66,7 +71,7 @@ export default function TwoFactor({
                             />
 
                             <div className="relative inline">
-                                <Form {...disable.form()}>
+                                <Form action={disable().url} method={disable().method}>
                                     {({ processing }) => (
                                         <Button
                                             variant="destructive"
@@ -99,7 +104,8 @@ export default function TwoFactor({
                                     </Button>
                                 ) : (
                                     <Form
-                                        {...enable.form()}
+                                        action={enable().url}
+                                        method={enable().method}
                                         onSuccess={() =>
                                             setShowSetupModal(true)
                                         }
@@ -132,6 +138,6 @@ export default function TwoFactor({
                     />
                 </div>
             </SettingsLayout>
-        </AppLayout>
+        </Layout>
     );
 }
