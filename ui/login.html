@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - E-Commerce Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="products.html" class="text-2xl font-bold text-indigo-600">E-Shop</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="products.html" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Products</a>
+                    <a href="cart.html" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium relative">
+                        Cart
+                        <span class="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Or
+                    <a href="register.html" class="font-medium text-indigo-600 hover:text-indigo-500">create a new account</a>
+                </p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="bg-white py-8 px-4 shadow-lg rounded-lg sm:px-10">
+                <form class="space-y-6" action="#" method="POST">
+                    <!-- Email Input -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                        <div class="mt-1">
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                autocomplete="email"
+                                required
+                                placeholder="your@email.com"
+                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            >
+                        </div>
+                        <!-- Error State (Hidden by default) -->
+                        <p class="mt-2 text-sm text-red-600 hidden" data-error="email">
+                            {{ $errors->first('email') }}
+                        </p>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <div class="mt-1">
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                autocomplete="current-password"
+                                required
+                                placeholder="••••••••"
+                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            >
+                        </div>
+                        <!-- Error State (Hidden by default) -->
+                        <p class="mt-2 text-sm text-red-600 hidden" data-error="password">
+                            {{ $errors->first('password') }}
+                        </p>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input
+                                id="remember-me"
+                                name="remember-me"
+                                type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            >
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                        </div>
+                        <div class="text-sm">
+                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                        </div>
+                    </div>
+
+                    <!-- General Error Message (Hidden by default) -->
+                    <div class="rounded-md bg-red-50 p-4 hidden" data-error="general">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button (Default State) -->
+                    <div>
+                        <button
+                            type="submit"
+                            class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                        >
+                            Sign in
+                        </button>
+                    </div>
+
+                    <!-- Submit Button (Loading State) - Hidden by default -->
+                    <div class="hidden" data-state="loading">
+                        <button
+                            type="button"
+                            disabled
+                            class="flex w-full justify-center items-center rounded-md border border-transparent bg-indigo-400 py-2 px-4 text-sm font-medium text-white shadow-sm cursor-not-allowed"
+                        >
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Signing in...
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Additional Links -->
+            <div class="text-center">
+                <p class="text-sm text-gray-600">
+                    Continue as
+                    <a href="products.html" class="font-medium text-indigo-600 hover:text-indigo-500">guest</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <p class="text-center text-sm text-gray-500">© 2025 E-Shop. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+

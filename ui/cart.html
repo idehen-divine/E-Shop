@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - E-Commerce Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="products.html" class="text-2xl font-bold text-indigo-600">E-Shop</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="products.html" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Products</a>
+                    <a href="cart.html" class="text-indigo-600 border-b-2 border-indigo-600 px-3 py-2 text-sm font-medium relative">
+                        Cart
+                        <span class="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $cartCount }}</span>
+                    </a>
+                    <a href="login.html" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+            <p class="mt-2 text-sm text-gray-600">Review your items before checkout</p>
+        </div>
+
+        <!-- Cart with Items State -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Cart Items Section -->
+            <div class="lg:col-span-2">
+                <!-- Cart Item 1 -->
+                <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <!-- Product Image -->
+                        <div class="flex-shrink-0">
+                            <img
+                                src="https://via.placeholder.com/150x150?text=Product"
+                                alt="{{ $cartItem->product->name }}"
+                                class="w-full sm:w-32 h-32 object-cover rounded-md"
+                            >
+                        </div>
+
+                        <!-- Product Details -->
+                        <div class="flex-1 flex flex-col sm:flex-row justify-between">
+                            <div class="flex-1 mb-4 sm:mb-0">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                                    <a href="#" class="hover:text-indigo-600">{{ $cartItem->product->name }}</a>
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-2">{{ $cartItem->product->description }}</p>
+                                <p class="text-lg font-bold text-indigo-600">${{ $cartItem->product->price }}</p>
+                            </div>
+
+                            <!-- Quantity Controls & Actions -->
+                            <div class="flex flex-row sm:flex-col items-start justify-between sm:items-end gap-4">
+                                <!-- Quantity Controls -->
+                                <div class="flex items-center border border-gray-300 rounded-md">
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Decrease quantity"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                        </svg>
+                                    </button>
+                                    <input
+                                        type="number"
+                                        value="{{ $cartItem->quantity }}"
+                                        min="1"
+                                        max="{{ $cartItem->product->stock }}"
+                                        class="w-16 text-center border-x border-gray-300 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Quantity"
+                                    >
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Increase quantity"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Item Subtotal & Remove Button -->
+                                <div class="flex flex-col items-end gap-2">
+                                    <p class="text-lg font-bold text-gray-900">${{ $cartItem->subtotal }}</p>
+                                    <button
+                                        type="button"
+                                        class="text-sm text-red-600 hover:text-red-800 font-medium focus:outline-none focus:underline"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Cart Item 2 -->
+                <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="flex-shrink-0">
+                            <img
+                                src="https://via.placeholder.com/150x150?text=Product"
+                                alt="{{ $cartItem->product->name }}"
+                                class="w-full sm:w-32 h-32 object-cover rounded-md"
+                            >
+                        </div>
+                        <div class="flex-1 flex flex-col sm:flex-row justify-between">
+                            <div class="flex-1 mb-4 sm:mb-0">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                                    <a href="#" class="hover:text-indigo-600">{{ $cartItem->product->name }}</a>
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-2">{{ $cartItem->product->description }}</p>
+                                <p class="text-lg font-bold text-indigo-600">${{ $cartItem->product->price }}</p>
+                            </div>
+                            <div class="flex flex-row sm:flex-col items-start justify-between sm:items-end gap-4">
+                                <div class="flex items-center border border-gray-300 rounded-md">
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Decrease quantity"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                        </svg>
+                                    </button>
+                                    <input
+                                        type="number"
+                                        value="{{ $cartItem->quantity }}"
+                                        min="1"
+                                        max="{{ $cartItem->product->stock }}"
+                                        class="w-16 text-center border-x border-gray-300 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Quantity"
+                                    >
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Increase quantity"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="flex flex-col items-end gap-2">
+                                    <p class="text-lg font-bold text-gray-900">${{ $cartItem->subtotal }}</p>
+                                    <button
+                                        type="button"
+                                        class="text-sm text-red-600 hover:text-red-800 font-medium focus:outline-none focus:underline"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Cart Item 3 -->
+                <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="flex-shrink-0">
+                            <img
+                                src="https://via.placeholder.com/150x150?text=Product"
+                                alt="{{ $cartItem->product->name }}"
+                                class="w-full sm:w-32 h-32 object-cover rounded-md"
+                            >
+                        </div>
+                        <div class="flex-1 flex flex-col sm:flex-row justify-between">
+                            <div class="flex-1 mb-4 sm:mb-0">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                                    <a href="#" class="hover:text-indigo-600">{{ $cartItem->product->name }}</a>
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-2">{{ $cartItem->product->description }}</p>
+                                <p class="text-lg font-bold text-indigo-600">${{ $cartItem->product->price }}</p>
+                            </div>
+                            <div class="flex flex-row sm:flex-col items-start justify-between sm:items-end gap-4">
+                                <div class="flex items-center border border-gray-300 rounded-md">
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Decrease quantity"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                        </svg>
+                                    </button>
+                                    <input
+                                        type="number"
+                                        value="{{ $cartItem->quantity }}"
+                                        min="1"
+                                        max="{{ $cartItem->product->stock }}"
+                                        class="w-16 text-center border-x border-gray-300 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Quantity"
+                                    >
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Increase quantity"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="flex flex-col items-end gap-2">
+                                    <p class="text-lg font-bold text-gray-900">${{ $cartItem->subtotal }}</p>
+                                    <button
+                                        type="button"
+                                        class="text-sm text-red-600 hover:text-red-800 font-medium focus:outline-none focus:underline"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Continue Shopping Link -->
+                <div class="mt-6">
+                    <a href="products.html" class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cart Summary Section -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-4">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
+
+                    <!-- Summary Details -->
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Items ({{ $cartItemsCount }})</span>
+                            <span class="text-gray-900 font-medium">${{ $subtotal }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Shipping</span>
+                            <span class="text-gray-900 font-medium">${{ $shipping }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Tax</span>
+                            <span class="text-gray-900 font-medium">${{ $tax }}</span>
+                        </div>
+                        <div class="border-t border-gray-200 pt-4">
+                            <div class="flex justify-between">
+                                <span class="text-base font-semibold text-gray-900">Total</span>
+                                <span class="text-2xl font-bold text-indigo-600">${{ $total }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Promo Code Section -->
+                    <div class="mb-6">
+                        <label for="promo-code" class="block text-sm font-medium text-gray-700 mb-2">Promo Code</label>
+                        <div class="flex gap-2">
+                            <input
+                                type="text"
+                                id="promo-code"
+                                placeholder="Enter code"
+                                class="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            >
+                            <button
+                                type="button"
+                                class="px-4 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Button (Default State) -->
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-6 py-3 rounded-md text-base font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Proceed to Checkout
+                    </button>
+
+                    <!-- Checkout Button (Loading State) - Hidden by default -->
+                    <button
+                        type="button"
+                        disabled
+                        class="hidden w-full bg-indigo-400 text-white px-6 py-3 rounded-md text-base font-medium cursor-not-allowed"
+                        data-state="loading"
+                    >
+                        <span class="flex items-center justify-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Processing...
+                        </span>
+                    </button>
+
+                    <!-- Security Badge -->
+                    <div class="mt-4 flex items-center justify-center text-xs text-gray-500">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        Secure Checkout
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Empty Cart State (Hidden by default, shown when cart is empty) -->
+    <div class="hidden flex-1 flex items-center justify-center px-4 py-16" data-state="empty-cart">
+        <div class="text-center max-w-md">
+            <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            <h2 class="mt-6 text-2xl font-bold text-gray-900">Your cart is empty</h2>
+            <p class="mt-2 text-sm text-gray-600">Start shopping to add items to your cart</p>
+            <div class="mt-8">
+                <a
+                    href="products.html"
+                    class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    Browse Products
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <p class="text-center text-sm text-gray-500">© 2025 E-Shop. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+

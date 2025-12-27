@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - E-Commerce Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="products.html" class="text-2xl font-bold text-indigo-600">E-Shop</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="products.html" class="text-indigo-600 border-b-2 border-indigo-600 px-3 py-2 text-sm font-medium">Products</a>
+                    <a href="cart.html" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium relative">
+                        Cart
+                        <span class="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $cartCount }}</span>
+                    </a>
+                    <a href="login.html" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Our Products</h1>
+            <p class="mt-2 text-sm text-gray-600">Browse our collection of quality products</p>
+        </div>
+
+        <!-- Filters & Search Section (Optional for future enhancement) -->
+        <div class="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div class="flex-1 w-full sm:max-w-xs">
+                <input
+                    type="search"
+                    placeholder="Search products..."
+                    class="block w-full rounded-md border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                >
+            </div>
+            <div class="flex gap-2">
+                <select class="rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500">
+                    <option>All Categories</option>
+                    <option>{{ $category->name }}</option>
+                </select>
+                <select class="rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500">
+                    <option>Sort by</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Name: A-Z</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Product Card 1 - In Stock (Active State) -->
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-indigo-600">${{ $product->price }}</span>
+                        <span class="text-sm text-green-600 font-medium">{{ $product->stock }} in stock</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </article>
+
+            <!-- Product Card 2 - Low Stock Warning -->
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-indigo-600">${{ $product->price }}</span>
+                        <span class="text-sm text-orange-600 font-medium">{{ $product->stock }} left</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </article>
+
+            <!-- Product Card 3 - Out of Stock (Disabled State) -->
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden opacity-75">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200 relative">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                    <div class="absolute inset-0 bg-gray-900 bg-opacity-40 flex items-center justify-center">
+                        <span class="bg-white text-gray-900 px-4 py-2 rounded-md font-semibold text-sm">Out of Stock</span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-gray-400">${{ $product->price }}</span>
+                        <span class="text-sm text-red-600 font-medium">Out of stock</span>
+                    </div>
+                    <button
+                        type="button"
+                        disabled
+                        class="w-full bg-gray-300 text-gray-500 px-4 py-2 rounded-md text-sm font-medium cursor-not-allowed"
+                    >
+                        Out of Stock
+                    </button>
+                </div>
+            </article>
+
+            <!-- Product Card 4 - Added to Cart State -->
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-indigo-600">${{ $product->price }}</span>
+                        <span class="text-sm text-green-600 font-medium">{{ $product->stock }} in stock</span>
+                    </div>
+                    <!-- Success State Button (Hidden by default, shown after adding to cart) -->
+                    <button
+                        type="button"
+                        class="hidden w-full bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
+                        data-state="success"
+                    >
+                        <span class="flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Added to Cart
+                        </span>
+                    </button>
+                    <!-- Default Add to Cart Button -->
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </article>
+
+            <!-- Additional Product Cards (Repeat pattern for backend loop) -->
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-indigo-600">${{ $product->price }}</span>
+                        <span class="text-sm text-green-600 font-medium">{{ $product->stock }} in stock</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-indigo-600">${{ $product->price }}</span>
+                        <span class="text-sm text-green-600 font-medium">{{ $product->stock }} in stock</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-indigo-600">${{ $product->price }}</span>
+                        <span class="text-sm text-green-600 font-medium">{{ $product->stock }} in stock</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200">
+                    <img
+                        src="https://via.placeholder.com/300x300?text=Product+Image"
+                        alt="{{ $product->name }}"
+                        class="h-64 w-full object-cover object-center"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-indigo-600">${{ $product->price }}</span>
+                        <span class="text-sm text-green-600 font-medium">{{ $product->stock }} in stock</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </article>
+        </div>
+
+        <!-- Pagination (Optional) -->
+        <div class="mt-8 flex items-center justify-center">
+            <nav class="flex items-center space-x-2" aria-label="Pagination">
+                <button
+                    type="button"
+                    disabled
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-400 bg-white border border-gray-300 cursor-not-allowed"
+                >
+                    Previous
+                </button>
+                <button type="button" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 border border-indigo-600">1</button>
+                <button type="button" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">2</button>
+                <button type="button" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">3</button>
+                <button type="button" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">Next</button>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <p class="text-center text-sm text-gray-500">© 2025 E-Shop. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
