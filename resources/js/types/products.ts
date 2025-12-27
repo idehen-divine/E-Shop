@@ -32,8 +32,14 @@ export interface Pagination {
     first_page: number;
 }
 
+export interface CartItem {
+    id: string;
+    quantity: number;
+}
+
 export interface ProductsIndexProps {
     products: Product[];
     pagination: Pagination | null;
+    cartItems?: Record<string, CartItem>;
 }
 

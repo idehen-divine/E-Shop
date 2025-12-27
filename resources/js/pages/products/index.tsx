@@ -11,19 +11,30 @@ import {
 } from '@/components/ui/select';
 import { useProductFilters } from '@/hooks/use-product-filters';
 import ShopLayout from '@/layouts/app/shop-layout';
+import cart from '@/routes/cart';
 import { type BreadcrumbItem } from '@/types';
 import { type ProductsIndexProps } from '@/types/products';
-import { Head } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Search, ShoppingCart } from 'lucide-react';
-import { useMemo } from 'react';
+import { Head, router } from '@inertiajs/react';
+import {
+    ChevronLeft,
+    ChevronRight,
+    Minus,
+    Plus,
+    Search,
+    ShoppingCart,
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 export default function ProductsIndex({
     products = [],
     pagination,
+    cartItems = {},
 }: ProductsIndexProps) {
     const searchParams = new URLSearchParams(
         typeof window !== 'undefined' ? window.location.search : '',
     );
+    const [addingToCart, setAddingToCart] = useState<Set<number>>(new Set());
+    const [updatingItems, setUpdatingItems] = useState<Set<string>>(new Set());
 
     const {
         searchQuery,
@@ -43,6 +54,60 @@ export default function ProductsIndex({
         () => (Array.isArray(products) ? products : []),
         [products],
     );
+
+    const handleAddToCart = (productId: number) => {
+        setAddingToCart((prev) => new Set(prev).add(productId));
+
+        router.post(
+            cart.store().url,
+            {
+                product_id: productId.toString(),
+                quantity: 1,
+            },
+            {
+                preserveScroll: true,
+                onFinish: () => {
+                    setAddingToCart((prev) => {
+                        const next = new Set(prev);
+                        next.delete(productId);
+                        return next;
+                    });
+                },
+            },
+        );
+    };
+
+    const handleQuantityChange = (
+        cartItemId: string,
+        productId: number,
+        newQuantity: number,
+        maxStock: number,
+    ) => {
+        if (newQuantity < 1) {
+            return;
+        }
+
+        if (newQuantity > maxStock) {
+            newQuantity = maxStock;
+        }
+
+        setUpdatingItems((prev) => new Set(prev).add(cartItemId));
+
+        router.put(
+            cart.update({ cartItemId }).url,
+            { quantity: newQuantity },
+            {
+                preserveScroll: true,
+                onFinish: () => {
+                    setUpdatingItems((prev) => {
+                        const next = new Set(prev);
+                        next.delete(cartItemId);
+                        return next;
+                    });
+                },
+            },
+        );
+    };
 
     const allCategories = useMemo(
         () =>
@@ -198,22 +263,116 @@ export default function ProductsIndex({
                                     </span>
                                     <span
                                         className={`text-sm font-medium ${
-                                            product.stock <= 5
-                                                ? 'text-orange-600'
+                                            product.stock < 10
+                                                ? 'text-red-600'
                                                 : 'text-green-600'
                                         }`}
                                     >
                                         {product.stock} in stock
                                     </span>
                                 </div>
-                                <Button
-                                    className="w-full"
-                                    disabled={!product.in_stock}
-                                >
-                                    {product.in_stock
-                                        ? 'Add to Cart'
-                                        : 'Out of Stock'}
-                                </Button>
+                                {cartItems[product.id] ? (
+                                    <div className="flex w-full items-center justify-between rounded-md border">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-9 w-9 rounded-none"
+                                            onClick={() =>
+                                                handleQuantityChange(
+                                                    cartItems[product.id]!.id,
+                                                    parseInt(product.id),
+                                                    cartItems[product.id]!
+                                                        .quantity - 1,
+                                                    product.stock,
+                                                )
+                                            }
+                                            disabled={
+                                                cartItems[product.id]!
+                                                    .quantity <= 1 ||
+                                                updatingItems.has(
+                                                    cartItems[product.id]!.id,
+                                                )
+                                            }
+                                        >
+                                            <Minus className="h-4 w-4" />
+                                        </Button>
+                                        <Input
+                                            type="number"
+                                            min="1"
+                                            max={product.stock}
+                                            value={
+                                                cartItems[product.id]!.quantity
+                                            }
+                                            onChange={(e) => {
+                                                const value = parseInt(
+                                                    e.target.value,
+                                                );
+                                                if (
+                                                    !isNaN(value) &&
+                                                    value >= 1 &&
+                                                    value <= product.stock
+                                                ) {
+                                                    handleQuantityChange(
+                                                        cartItems[product.id]!
+                                                            .id,
+                                                        parseInt(product.id),
+                                                        value,
+                                                        product.stock,
+                                                    );
+                                                }
+                                            }}
+                                            className="h-9 w-16 border-x text-center"
+                                            disabled={updatingItems.has(
+                                                cartItems[product.id]!.id,
+                                            )}
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-9 w-9 rounded-none"
+                                            onClick={() =>
+                                                handleQuantityChange(
+                                                    cartItems[product.id]!.id,
+                                                    parseInt(product.id),
+                                                    cartItems[product.id]!
+                                                        .quantity + 1,
+                                                    product.stock,
+                                                )
+                                            }
+                                            disabled={
+                                                cartItems[product.id]!
+                                                    .quantity >=
+                                                    product.stock ||
+                                                updatingItems.has(
+                                                    cartItems[product.id]!.id,
+                                                )
+                                            }
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <Button
+                                        className="w-full"
+                                        disabled={
+                                            !product.in_stock ||
+                                            addingToCart.has(
+                                                parseInt(product.id),
+                                            )
+                                        }
+                                        onClick={() =>
+                                            handleAddToCart(
+                                                parseInt(product.id),
+                                            )
+                                        }
+                                    >
+                                        {addingToCart.has(parseInt(product.id))
+                                            ? 'Adding...'
+                                            : product.in_stock
+                                              ? 'Add to Cart'
+                                              : 'Out of Stock'}
+                                    </Button>
+                                )}
                             </CardContent>
                         </Card>
                     ))}
