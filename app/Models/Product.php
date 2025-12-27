@@ -83,7 +83,7 @@ class Product extends Model
 
     public function getDiscountPercentage(): ?int
     {
-        if (!$this->hasDiscount()) {
+        if (! $this->hasDiscount()) {
             return null;
         }
 
