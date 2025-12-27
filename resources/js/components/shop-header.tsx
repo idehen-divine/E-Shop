@@ -8,13 +8,14 @@ import {
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { dashboard, home, login, register } from '@/routes';
+import cart from '@/routes/cart';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { ShoppingCart } from 'lucide-react';
 import AppLogo from './app-logo';
 
 export function ShopHeader() {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, cartCount = 0 } = usePage<SharedData>().props;
     const getInitials = useInitials();
     const isAdmin =
         auth.user?.roles?.includes('SUPER_ADMIN') ||
@@ -28,11 +29,20 @@ export function ShopHeader() {
                 </Link>
 
                 <div className="flex items-center space-x-4">
-                    <Button variant="ghost" size="icon" className="relative">
-                        <ShoppingCart className="h-5 w-5" />
-                        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                            0
-                        </span>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="relative"
+                        asChild
+                    >
+                        <Link href={cart.index()}>
+                            <ShoppingCart className="h-5 w-5" />
+                            {cartCount > 0 && (
+                                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </Link>
                     </Button>
 
                     {auth.user ? (
