@@ -507,5 +507,14 @@ class ProductSeeder extends Seeder
             $categoryIds = ProductCategory::whereIn('name', $categoryNames)->pluck('id')->toArray();
             $product->categories()->attach($categoryIds);
         }
+
+        $allProducts = Product::all();
+        $randomProducts = $allProducts->random(min(10, $allProducts->count()));
+
+        foreach ($randomProducts as $product) {
+            $product->update([
+                'stock' => fake()->numberBetween(1, 9),
+            ]);
+        }
     }
 }
