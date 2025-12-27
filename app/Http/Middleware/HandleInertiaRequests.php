@@ -38,6 +38,24 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $cartCount = 0;
+        $userId = $request->user()?->id;
+        $sessionId = $request->session()->getId();
+
+        if ($userId || $sessionId) {
+            $cart = \App\Models\Cart::where(function ($query) use ($userId, $sessionId) {
+                if ($userId) {
+                    $query->where('user_id', $userId);
+                } elseif ($sessionId) {
+                    $query->where('session_id', $sessionId)->whereNull('user_id');
+                }
+            })->withCount('items')->first();
+
+            if ($cart) {
+                $cartCount = $cart->items()->sum('quantity');
+            }
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -50,6 +68,7 @@ class HandleInertiaRequests extends Middleware
                     ]
                     : null,
             ],
+            'cartCount' => $cartCount,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
