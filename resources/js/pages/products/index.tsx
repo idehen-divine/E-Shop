@@ -33,7 +33,7 @@ export default function ProductsIndex({
     const searchParams = new URLSearchParams(
         typeof window !== 'undefined' ? window.location.search : '',
     );
-    const [addingToCart, setAddingToCart] = useState<Set<number>>(new Set());
+    const [addingToCart, setAddingToCart] = useState<Set<string>>(new Set());
     const [updatingItems, setUpdatingItems] = useState<Set<string>>(new Set());
 
     const {
@@ -55,13 +55,13 @@ export default function ProductsIndex({
         [products],
     );
 
-    const handleAddToCart = (productId: number) => {
+    const handleAddToCart = (productId: string) => {
         setAddingToCart((prev) => new Set(prev).add(productId));
 
         router.post(
             cart.store().url,
             {
-                product_id: productId.toString(),
+                product_id: productId,
                 quantity: 1,
             },
             {
@@ -79,7 +79,7 @@ export default function ProductsIndex({
 
     const handleQuantityChange = (
         cartItemId: string,
-        productId: number,
+        productId: string,
         newQuantity: number,
         maxStock: number,
     ) => {
@@ -280,7 +280,7 @@ export default function ProductsIndex({
                                             onClick={() =>
                                                 handleQuantityChange(
                                                     cartItems[product.id]!.id,
-                                                    parseInt(product.id),
+                                                    product.id,
                                                     cartItems[product.id]!
                                                         .quantity - 1,
                                                     product.stock,
@@ -315,7 +315,7 @@ export default function ProductsIndex({
                                                     handleQuantityChange(
                                                         cartItems[product.id]!
                                                             .id,
-                                                        parseInt(product.id),
+                                                        product.id,
                                                         value,
                                                         product.stock,
                                                     );
@@ -333,7 +333,7 @@ export default function ProductsIndex({
                                             onClick={() =>
                                                 handleQuantityChange(
                                                     cartItems[product.id]!.id,
-                                                    parseInt(product.id),
+                                                    product.id,
                                                     cartItems[product.id]!
                                                         .quantity + 1,
                                                     product.stock,
@@ -356,17 +356,13 @@ export default function ProductsIndex({
                                         className="w-full"
                                         disabled={
                                             !product.in_stock ||
-                                            addingToCart.has(
-                                                parseInt(product.id),
-                                            )
+                                            addingToCart.has(product.id)
                                         }
                                         onClick={() =>
-                                            handleAddToCart(
-                                                parseInt(product.id),
-                                            )
+                                            handleAddToCart(product.id)
                                         }
                                     >
-                                        {addingToCart.has(parseInt(product.id))
+                                        {addingToCart.has(product.id)
                                             ? 'Adding...'
                                             : product.in_stock
                                               ? 'Add to Cart'
