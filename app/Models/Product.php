@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -40,7 +41,8 @@ class Product extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(ProductCategory::class, 'category_product');
+        return $this->belongsToMany(ProductCategory::class, 'category_product')
+            ->using(CategoryProduct::class);
     }
 
     protected static function boot(): void
@@ -81,7 +83,7 @@ class Product extends Model
 
     public function getDiscountPercentage(): ?int
     {
-        if (! $this->hasDiscount()) {
+        if (!$this->hasDiscount()) {
             return null;
         }
 
