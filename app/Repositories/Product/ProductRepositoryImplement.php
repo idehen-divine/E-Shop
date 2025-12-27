@@ -28,19 +28,37 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
      */
     public function getAllProducts($request)
     {
+        if (!$request->has('per_page')) {
+            $request->merge(['per_page' => 24]);
+        }
+
         return helpers()->queryableHelper()->fetchWithFilters($this->model, function ($query) use ($request) {
             $query->with('categories');
 
             if ($request->filled('search')) {
-                $query->where('name', 'like', '%'.$request->search.'%');
+                $query->where('name', 'like', '%' . $request->search . '%');
             }
             if ($request->filled('category')) {
                 $query->whereHas('categories', function ($query) use ($request) {
-                    $query->where('name', 'like', '%'.$request->category.'%');
+                    $query->where('slug', $request->category);
                 });
             }
             if ($request->filled('price')) {
-                $query->where('price', '>=', $request->price);
+                $priceFilter = $request->price;
+                switch ($priceFilter) {
+                    case 'under-50':
+                        $query->where('price', '<', 50);
+                        break;
+                    case '50-100':
+                        $query->whereBetween('price', [50, 99.99]);
+                        break;
+                    case '100-200':
+                        $query->whereBetween('price', [100, 199.99]);
+                        break;
+                    case 'over-200':
+                        $query->where('price', '>=', 200);
+                        break;
+                }
             }
 
             $query->active();
