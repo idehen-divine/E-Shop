@@ -1,27 +1,30 @@
-// Components
 import { login } from '@/routes';
 import { email } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Mail, Send } from 'lucide-react';
 
 import InputError from '@/components/input-error';
+import { Icon } from '@/components/icon';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 
 export default function ForgotPassword({ status }: { status?: string }) {
     return (
         <AuthLayout
-            title="Forgot password"
-            description="Enter your email to receive a password reset link"
+            title="Reset your password"
+            description="Enter your email address and we'll send you a link to reset your password"
         >
             <Head title="Forgot password" />
 
             {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    {status}
+                <div className="-mt-2 mb-6 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50/50 p-3 text-sm font-medium text-green-700 dark:border-green-900/50 dark:bg-green-950/20 dark:text-green-400">
+                    <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+                    <span>{status}</span>
                 </div>
             )}
 
@@ -29,39 +32,66 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 <Form {...email.form()}>
                     {({ processing, errors }) => (
                         <>
-                            <div className="grid gap-2">
+                            <div className="space-y-2">
                                 <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    autoComplete="off"
-                                    autoFocus
-                                    placeholder="email@example.com"
-                                />
-
+                                <div className="relative">
+                                    <Icon
+                                        iconNode={Mail}
+                                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                    />
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        autoComplete="email"
+                                        autoFocus
+                                        placeholder="email@example.com"
+                                        className="pl-9"
+                                    />
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    We'll send a password reset link to this
+                                    email address
+                                </p>
                                 <InputError message={errors.email} />
                             </div>
 
-                            <div className="my-6 flex items-center justify-start">
-                                <Button
-                                    className="w-full"
-                                    disabled={processing}
-                                    data-test="email-password-reset-link-button"
-                                >
-                                    {processing && (
-                                        <LoaderCircle className="h-4 w-4 animate-spin" />
-                                    )}
-                                    Email password reset link
-                                </Button>
-                            </div>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                size="lg"
+                                disabled={processing}
+                                data-test="email-password-reset-link-button"
+                            >
+                                {processing ? (
+                                    <>
+                                        <Spinner />
+                                        Sending reset link...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Send className="mr-2 h-4 w-4" />
+                                        Send reset link
+                                    </>
+                                )}
+                            </Button>
                         </>
                     )}
                 </Form>
 
-                <div className="space-x-1 text-center text-sm text-muted-foreground">
-                    <span>Or, return to</span>
-                    <TextLink href={login()}>log in</TextLink>
+                <Separator />
+
+                <div className="text-center text-sm">
+                    <span className="text-muted-foreground">
+                        Remember your password?{' '}
+                    </span>
+                    <TextLink href={login()} className="font-medium">
+                        <Icon
+                            iconNode={ArrowLeft}
+                            className="mr-1 inline h-3 w-3"
+                        />
+                        Back to sign in
+                    </TextLink>
                 </div>
             </div>
         </AuthLayout>

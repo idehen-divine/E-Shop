@@ -1,5 +1,13 @@
-import HeadingSmall from '@/components/heading-small';
+import { Icon } from '@/components/icon';
 import InputError from '@/components/input-error';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -15,6 +23,7 @@ import { Label } from '@/components/ui/label';
 import { destroy } from '@/routes/profile';
 import { type SharedData } from '@/types';
 import { Form, usePage } from '@inertiajs/react';
+import { AlertTriangle, Trash2 } from 'lucide-react';
 import { useRef } from 'react';
 
 export default function DeleteUser() {
@@ -27,25 +36,57 @@ export default function DeleteUser() {
     }
 
     return (
-        <div className="space-y-6">
-            <HeadingSmall
-                title="Delete account"
-                description="Delete your account and all of its resources"
-            />
-            <div className="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
-                <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
-                    <p className="font-medium">Warning</p>
-                    <p className="text-sm">
-                        Please proceed with caution, this cannot be undone.
-                    </p>
+        <Card className="border-red-200 dark:border-red-900/50">
+            <CardHeader>
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
+                        <Icon
+                            iconNode={Trash2}
+                            className="h-5 w-5 text-red-600 dark:text-red-400"
+                        />
+                    </div>
+                    <div>
+                        <CardTitle>Delete Account</CardTitle>
+                        <CardDescription>
+                            Permanently delete your account and all of its
+                            resources
+                        </CardDescription>
+                    </div>
                 </div>
+            </CardHeader>
 
+            <CardContent>
+                <div className="rounded-lg border border-red-200 bg-red-50/50 p-4 dark:border-red-900/50 dark:bg-red-950/20">
+                    <div className="flex items-start gap-3">
+                        <Icon
+                            iconNode={AlertTriangle}
+                            className="mt-0.5 h-5 w-5 text-red-600 dark:text-red-400"
+                        />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-red-900 dark:text-red-100">
+                                Warning: This action cannot be undone
+                            </p>
+                            <p className="mt-1 text-sm text-red-800 dark:text-red-200">
+                                Once your account is deleted, all of its
+                                resources and data will be permanently removed.
+                                Please proceed with caution.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </CardContent>
+
+            <CardFooter>
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button
                             variant="destructive"
                             data-test="delete-user-button"
                         >
+                            <Icon
+                                iconNode={Trash2}
+                                className="mr-2 h-4 w-4"
+                            />
                             Delete account
                         </Button>
                     </DialogTrigger>
@@ -85,7 +126,7 @@ export default function DeleteUser() {
                                             type="password"
                                             name="password"
                                             ref={passwordInput}
-                                            placeholder="Password"
+                                            placeholder="Enter your password to confirm"
                                             autoComplete="current-password"
                                         />
 
@@ -113,7 +154,9 @@ export default function DeleteUser() {
                                                 type="submit"
                                                 data-test="confirm-delete-user-button"
                                             >
-                                                Delete account
+                                                {processing
+                                                    ? 'Deleting...'
+                                                    : 'Delete account'}
                                             </button>
                                         </Button>
                                     </DialogFooter>
@@ -122,7 +165,7 @@ export default function DeleteUser() {
                         </Form>
                     </DialogContent>
                 </Dialog>
-            </div>
-        </div>
+            </CardFooter>
+        </Card>
     );
 }
