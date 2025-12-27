@@ -1,14 +1,12 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', [ProductController::class, 'index'])->name('home');
+
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('dashboard', function () {
