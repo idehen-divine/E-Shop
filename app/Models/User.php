@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Enum\UserRoleEnum;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles, HasUuids, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_active',
     ];
 
     /**
@@ -49,4 +53,27 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    /**
+     * Set the user's role by detaching existing roles and assigning a new role.
+     *
+     * @param  UserRoleEnum  $role  The role to assign to the user.
+     */
+    public function setRole(UserRoleEnum $role): void
+    {
+        if ($this->roles()->exists()) {
+            $this->roles()->detach();
+        }
+
+        $this->assignRole($role->name);
+    }
+
+    /**
+     * Get all permission names assigned to the user.
+     */
+    public function getAllPermissionNames(): array
+    {
+        return $this->permissions()->pluck('name')->toArray();
+    }
+
 }
