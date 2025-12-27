@@ -20,25 +20,26 @@ export function NavFooter({
     return (
         <SidebarGroup
             {...props}
-            className={`group-data-[collapsible=icon]:p-0 ${className || ''}`}
+            className={`px-2 py-2 group-data-[collapsible=icon]:p-0 ${className || ''}`}
         >
             <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="space-y-1">
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton
                                 asChild
-                                className="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
+                                className="group h-9 gap-3 rounded-lg px-3 text-xs text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                             >
                                 <a
                                     href={resolveUrl(item.href)}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="flex items-center gap-3"
                                 >
                                     {item.icon && (
                                         <Icon
                                             iconNode={item.icon}
-                                            className="h-5 w-5"
+                                            className="h-4 w-4 flex-shrink-0 transition-transform group-hover:scale-110"
                                         />
                                     )}
                                     <span>{item.title}</span>

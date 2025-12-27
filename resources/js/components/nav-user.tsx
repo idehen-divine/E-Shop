@@ -26,21 +26,21 @@ export function NavUser() {
     }
 
     return (
-        <SidebarMenu>
+        <SidebarMenu className="px-2">
             <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className="group text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent"
+                            className="group h-auto gap-3 rounded-lg px-3 py-2.5 text-sidebar-accent-foreground transition-all hover:bg-sidebar-accent/50 data-[state=open]:bg-sidebar-accent data-[state=open]:shadow-sm"
                             data-test="sidebar-menu-button"
                         >
                             <UserInfo user={auth.user} />
-                            <ChevronsUpDown className="ml-auto size-4" />
+                            <ChevronsUpDown className="ml-auto size-4 opacity-60 transition-opacity group-hover:opacity-100" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
-                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg border shadow-lg"
                         align="end"
                         side={
                             isMobile
