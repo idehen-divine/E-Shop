@@ -9,9 +9,11 @@ class CartResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $items = $this->whenLoaded('items');
+
         return [
             'id' => $this->id,
-            'items' => CartItemResource::collection($this->whenLoaded('items')),
+            'items' => $items ? CartItemResource::collection($items)->toArray($request) : [],
             'total' => (string) $this->total,
             'item_count' => $this->item_count,
         ];
