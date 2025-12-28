@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { DeleteCartItemDialog } from '@/components/cart/delete-cart-item-dialog';
 import { useCartActions } from '@/hooks/use-cart-actions';
 import { Link } from '@inertiajs/react';
 import { Minus, Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface CartItemProps {
     id: string;
@@ -29,6 +31,12 @@ export function CartItem({
 }: CartItemProps) {
     const { updateQuantity, removeItem, updatingItems } = useCartActions();
     const isUpdating = updatingItems.has(id);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+    const handleDeleteConfirm = () => {
+        removeItem(id);
+        setShowDeleteDialog(false);
+    };
 
     return (
         <Card>
@@ -113,7 +121,8 @@ export function CartItem({
                                 variant="ghost"
                                 size="sm"
                                 className="text-destructive hover:text-destructive"
-                                onClick={() => removeItem(id)}
+                                onClick={() => setShowDeleteDialog(true)}
+                                disabled={isUpdating}
                             >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Remove
@@ -122,6 +131,13 @@ export function CartItem({
                     </div>
                 </div>
             </CardContent>
+            <DeleteCartItemDialog
+                open={showDeleteDialog}
+                onOpenChange={setShowDeleteDialog}
+                onConfirm={handleDeleteConfirm}
+                itemName={product.name}
+                isDeleting={isUpdating}
+            />
         </Card>
     );
 }
