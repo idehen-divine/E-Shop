@@ -149,14 +149,15 @@ class CartServiceImplement extends ServiceApi implements CartService
 
                         if ($cartWithItemsData && isset($cartWithItemsData['cart'])) {
                             $cartData = $cartWithItemsData['cart'];
-                            $cartItems = $cartData->items->mapWithKeys(function ($item) {
-                                return [
-                                    (string) $item->product_id => [
-                                        'id' => $item->id,
-                                        'quantity' => $item->quantity,
-                                    ],
+                            $items = $cartData['items'] ?? [];
+
+                            foreach ($items as $item) {
+                                $productId = (string) $item['product']['id'];
+                                $cartItems[$productId] = [
+                                    'id' => $item['id'],
+                                    'quantity' => $item['quantity'],
                                 ];
-                            })->toArray();
+                            }
                         }
                     }
                 }
