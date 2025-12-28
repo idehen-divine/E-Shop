@@ -68,6 +68,9 @@ export function useCartActions() {
     const removeItem = (cartItemId: string) => {
         router.delete(cartRoutes.destroy({ cartItemId }).url, {
             preserveScroll: true,
+            onSuccess: () => {
+                router.reload({ only: ['cartItems'] });
+            },
         });
     };
 
