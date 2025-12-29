@@ -53,10 +53,12 @@ class QueryableHelper extends Helper
         if ($extraQuery) {
             $extraQuery($model);
         }
-        $sortBy = request('sort_by', 'created_at');
-        $sortOrder = request('sort_order', 'desc');
+        $sortBy = request('sort_by');
+        $sortOrder = request('sort_order', 'asc');
         $perPage = request('per_page', 10);
-        $model->orderBy($sortBy, $sortOrder);
+        if ($sortBy) {
+            $model->orderBy($sortBy, $sortOrder);
+        }
 
         return $model->paginate($perPage);
     }
@@ -77,7 +79,8 @@ class QueryableHelper extends Helper
 
         request()->validate([
             'search' => 'nullable|string|max:255',
-            'status' => 'nullable|string',
+            'status' => 'nullable|string|in:active,inactive',
+            'featured' => 'nullable|string|in:featured,not-featured',
             'sort_by' => 'nullable|string|in:'.$sortByOptions,
             'sort_order' => 'nullable|string|in:asc,desc',
             'per_page' => 'nullable|integer|min:1|max:100',
