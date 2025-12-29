@@ -52,6 +52,8 @@ class ProductServiceImplement extends ServiceApi implements ProductService
                     ->setMessage('Product not found');
             }
 
+            $product->load('categories');
+
             return $this->setCode(200)
                 ->setMessage('Product retrieved successfully')
                 ->setData([
