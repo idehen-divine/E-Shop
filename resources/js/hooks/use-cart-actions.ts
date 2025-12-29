@@ -6,14 +6,14 @@ export function useCartActions() {
     const [updatingItems, setUpdatingItems] = useState<Set<string>>(new Set());
     const [addingToCart, setAddingToCart] = useState<Set<string>>(new Set());
 
-    const addToCart = (productId: string) => {
+    const addToCart = (productId: string, quantity: number = 1) => {
         setAddingToCart((prev) => new Set(prev).add(productId));
 
         router.post(
             cartRoutes.store().url,
             {
                 product_id: productId,
-                quantity: 1,
+                quantity,
             },
             {
                 preserveScroll: true,
