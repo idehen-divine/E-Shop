@@ -13,6 +13,7 @@ export default function ProductsIndex({
     products = [],
     pagination,
     cartItems = {},
+    categories = [],
 }: ProductsIndexProps) {
     const searchParams = new URLSearchParams(
         typeof window !== 'undefined' ? window.location.search : '',
@@ -72,7 +73,7 @@ export default function ProductsIndex({
                 </div>
 
                 <ProductFilters
-                    products={productList}
+                    categories={categories}
                     searchQuery={searchQuery}
                     selectedCategory={selectedCategory}
                     priceRange={priceRange}
