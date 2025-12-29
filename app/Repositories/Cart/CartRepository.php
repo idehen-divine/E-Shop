@@ -10,7 +10,7 @@ interface CartRepository extends Repository
 
     public function getCartWithItems($cartId);
 
-    public function addItem($cartId, $productId, $quantity, $price);
+    public function addItem($cartId, $product, $quantity);
 
     public function updateItem($cartItemId, $quantity);
 
@@ -20,7 +20,9 @@ interface CartRepository extends Repository
 
     public function getCartItem($cartId, $productId);
 
-    public function getCartBySessionId($sessionId);
+    public function findSessionCartForMigration($cookieCartId = null, $sessionId = null);
 
-    public function getRecentSessionCarts($minutes = 60);
+    public function migrateCartItems($fromCartId, $toCartId);
+
+    public function updateCartSessionId($cartId, $sessionId);
 }

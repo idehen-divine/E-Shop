@@ -19,14 +19,14 @@ class CartRepositoryImplement extends Eloquent implements CartRepository
     }
 
     /**
-     * Get an existing cart or create a new one for the given user ID or session ID.
+     * Get an existing cart with items or create a new one for the given user ID or session ID.
      *
      * @param  string|null  $userId
      * @param  string|null  $sessionId
      */
     public function getOrCreateCart($userId = null, $sessionId = null): Cart
     {
-        $query = $this->model->query();
+        $query = $this->model->with(['items.product']);
 
         if ($userId) {
             $query->where('user_id', $userId);
@@ -41,6 +41,7 @@ class CartRepositoryImplement extends Eloquent implements CartRepository
                 'user_id' => $userId,
                 'session_id' => $sessionId,
             ]);
+            $cart->load(['items.product']);
         }
 
         return $cart;
@@ -60,14 +61,13 @@ class CartRepositoryImplement extends Eloquent implements CartRepository
      * Add an item to a cart or update quantity if item already exists.
      *
      * @param  string  $cartId
-     * @param  string  $productId
+     * @param  \App\Models\Product  $product
      * @param  int  $quantity
-     * @param  string  $price
      */
-    public function addItem($cartId, $productId, $quantity, $price): CartItem
+    public function addItem($cartId, $product, $quantity): CartItem
     {
         $cartItem = CartItem::where('cart_id', $cartId)
-            ->where('product_id', $productId)
+            ->where('product_id', $product->id)
             ->first();
 
         if ($cartItem) {
@@ -76,9 +76,9 @@ class CartRepositoryImplement extends Eloquent implements CartRepository
         } else {
             $cartItem = CartItem::create([
                 'cart_id' => $cartId,
-                'product_id' => $productId,
+                'product_id' => $product->id,
                 'quantity' => $quantity,
-                'price' => $price,
+                'price' => $product->price,
             ]);
         }
 
@@ -138,32 +138,101 @@ class CartRepositoryImplement extends Eloquent implements CartRepository
     }
 
     /**
-     * Get a session cart with its items by session ID.
+     * Find a session cart for migration (checks cookie, session ID, then recent carts).
      *
-     * @param  string  $sessionId
+     * @param  string|null  $cookieCartId
+     * @param  string|null  $sessionId
      */
-    public function getCartBySessionId($sessionId): ?Cart
+    public function findSessionCartForMigration($cookieCartId = null, $sessionId = null): ?Cart
     {
-        return $this->model->with('items.product')
-            ->where('session_id', $sessionId)
-            ->whereNull('user_id')
-            ->first();
-    }
+        if ($cookieCartId) {
+            $cart = $this->getCartWithItems($cookieCartId);
+            if ($cart && $cart->user_id === null) {
+                return $cart;
+            }
+        }
 
-    /**
-     * Get recent session carts (without user ID) created within the specified minutes.
-     *
-     * @param  int  $minutes
-     */
-    public function getRecentSessionCarts($minutes = 60): \Illuminate\Database\Eloquent\Collection
-    {
-        return $this->model->with('items.product')
+        if ($sessionId) {
+            $cart = $this->model->with('items.product')
+                ->where('session_id', $sessionId)
+                ->whereNull('user_id')
+                ->first();
+
+            if ($cart) {
+                return $cart;
+            }
+        }
+
+        $recentCart = $this->model->with('items.product')
             ->whereNull('user_id')
-            ->where('created_at', '>=', now()->subMinutes($minutes))
+            ->where('created_at', '>=', now()->subMinutes(60))
             ->whereHas('items', function ($query) {
                 $query->where('quantity', '>', 0);
             })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->first();
+
+        return $recentCart && $recentCart->items->isNotEmpty() ? $recentCart : null;
+    }
+
+    /**
+     * Migrate cart items from one cart to another.
+     *
+     * @param  string  $fromCartId
+     * @param  string  $toCartId
+     */
+    public function migrateCartItems($fromCartId, $toCartId): void
+    {
+        $fromCart = $this->getCartWithItems($fromCartId);
+        $toCart = $this->getCartWithItems($toCartId);
+
+        if (! $fromCart || $fromCart->items->isEmpty()) {
+            return;
+        }
+
+        foreach ($fromCart->items as $item) {
+            $product = $item->product;
+
+            if (! $product) {
+                continue;
+            }
+
+            $existingItem = $this->getCartItem($toCartId, $item->product_id);
+
+            if ($existingItem) {
+                $newQuantity = $existingItem->quantity + $item->quantity;
+
+                if ($product->stock < $newQuantity) {
+                    $this->updateItem($existingItem->id, $product->stock);
+                } else {
+                    $this->updateItem($existingItem->id, $newQuantity);
+                }
+            } else {
+                $quantityToAdd = min($item->quantity, $product->stock);
+
+                if ($quantityToAdd > 0) {
+                    $this->addItem($toCartId, $product, $quantityToAdd);
+                }
+            }
+        }
+    }
+
+    /**
+     * Update cart session ID.
+     *
+     * @param  string  $cartId
+     * @param  string  $sessionId
+     */
+    public function updateCartSessionId($cartId, $sessionId): bool
+    {
+        $cart = $this->model->find($cartId);
+
+        if (! $cart) {
+            return false;
+        }
+
+        $cart->session_id = $sessionId;
+
+        return $cart->save();
     }
 }
