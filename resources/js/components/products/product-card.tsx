@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useCartActions } from '@/hooks/use-cart-actions';
+import products from '@/routes/products';
 import { type CartItem, type Product } from '@/types/products';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 
@@ -67,7 +68,22 @@ export function ProductCard({
     const handleProductClick = () => {
         if (onProductClick) {
             onProductClick(product);
+        } else {
+            router.visit(products.show(product.id).url);
         }
+    };
+
+    const handleCardClick = (e: React.MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (
+            target.closest('button') ||
+            target.closest('input') ||
+            target.closest('a') ||
+            target.closest('[role="button"]')
+        ) {
+            return;
+        }
+        handleProductClick();
     };
 
     const handleDeleteConfirm = () => {
@@ -103,13 +119,14 @@ export function ProductCard({
                                 variant="ghost"
                                 size="icon"
                                 className="h-9 w-9 cursor-pointer rounded-none"
-                                onClick={() =>
+                                onClick={(e) => {
+                                    e.stopPropagation();
                                     updateQuantity(
                                         cartItem!.id,
                                         cartItem!.quantity - 1,
                                         product.stock,
-                                    )
-                                }
+                                    );
+                                }}
                                 disabled={cartItem!.quantity <= 1 || isUpdating}
                             >
                                 <Minus className="h-4 w-4" />
@@ -120,6 +137,7 @@ export function ProductCard({
                                 max={product.stock}
                                 value={cartItem!.quantity}
                                 onChange={(e) => {
+                                    e.stopPropagation();
                                     const value = parseInt(e.target.value);
                                     if (
                                         !isNaN(value) &&
@@ -133,20 +151,22 @@ export function ProductCard({
                                         );
                                     }
                                 }}
+                                onClick={(e) => e.stopPropagation()}
                                 className="h-9 w-16 border-x text-center"
                                 disabled={isUpdating}
                             />
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-9 w-9 rounded-none cursor-pointer"
-                                onClick={() =>
+                                className="h-9 w-9 cursor-pointer rounded-none"
+                                onClick={(e) => {
+                                    e.stopPropagation();
                                     updateQuantity(
                                         cartItem!.id,
                                         cartItem!.quantity + 1,
                                         product.stock,
-                                    )
-                                }
+                                    );
+                                }}
                                 disabled={
                                     cartItem!.quantity >= product.stock ||
                                     isUpdating
@@ -159,7 +179,10 @@ export function ProductCard({
                             variant="ghost"
                             size="icon"
                             className="h-9 w-9 cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive"
-                            onClick={() => setShowDeleteDialog(true)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowDeleteDialog(true);
+                            }}
                             disabled={isUpdating}
                         >
                             <Trash2 className="h-4 w-4" />
@@ -180,7 +203,10 @@ export function ProductCard({
             <Button
                 className="w-full"
                 disabled={!product.in_stock || isAdding}
-                onClick={() => addToCart(product.id)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(product.id);
+                }}
             >
                 {isAdding
                     ? 'Adding...'
@@ -193,7 +219,8 @@ export function ProductCard({
 
     return (
         <Card
-            className={`overflow-hidden transition-shadow duration-200 hover:shadow-md ${className}`}
+            className={`cursor-pointer overflow-hidden transition-shadow duration-200 hover:shadow-md ${className}`}
+            onClick={handleCardClick}
         >
             <div className="relative aspect-square w-full bg-muted">
                 {onProductClick ? (
