@@ -30,7 +30,6 @@ export function EditUserDialog({
         }
     }, [open]);
 
-    // Determine if user is an admin
     const isAdmin = user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_ADMIN');
     const updateRoute = isAdmin
         ? `/admin/admins/${user.id}`

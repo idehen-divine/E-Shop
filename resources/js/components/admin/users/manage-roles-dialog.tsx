@@ -36,7 +36,6 @@ export function ManageRolesDialog({
 
     useEffect(() => {
         if (open && user.roles) {
-            // Only include roles that are available in the manageRoles list
             const availableRoleNames = roles.map((r) => r.name);
             const filteredRoles = user.roles.filter((role) =>
                 availableRoleNames.includes(role)

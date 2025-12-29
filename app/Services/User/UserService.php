@@ -14,6 +14,8 @@ interface UserService extends BaseService
 
     public function toggleUserActive(string $id);
 
+    public function toggleAdminActive(string $id);
+
     public function updateUser(string $id, array $data);
 
     public function updateAdmin(string $id, array $data);

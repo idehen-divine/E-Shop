@@ -49,14 +49,13 @@ class UserServiceImplement extends ServiceApi implements UserService
             $users = $this->mainRepository->getAdminUsers();
             $roles = $this->mainRepository->getAvailableRoles(['SUPER_ADMIN', 'USER']);
 
-            $rolesArray = $roles->map(fn($role) => [
+            $rolesArray = $roles->map(fn ($role) => [
                 'id' => $role->id,
                 'name' => $role->name,
             ])->toArray();
 
-            // Get roles for manage roles dialog (excluding USER and ADMIN)
             $manageRoles = $this->mainRepository->getAvailableRoles(['SUPER_ADMIN', 'USER', 'ADMIN']);
-            $manageRolesArray = $manageRoles->map(fn($role) => [
+            $manageRolesArray = $manageRoles->map(fn ($role) => [
                 'id' => $role->id,
                 'name' => $role->name,
             ])->toArray();
@@ -116,7 +115,7 @@ class UserServiceImplement extends ServiceApi implements UserService
             }
 
             $user->update([
-                'is_active' => !$user->is_active,
+                'is_active' => ! $user->is_active,
             ]);
 
             return $this->setCode(200)
@@ -127,6 +126,41 @@ class UserServiceImplement extends ServiceApi implements UserService
         } catch (\Exception $e) {
             return $this->setCode(500)
                 ->setMessage('An error occurred while updating user status')
+                ->setError($e->getMessage());
+        }
+    }
+
+    /**
+     * Toggle the active status of an admin user.
+     */
+    public function toggleAdminActive(string $id): UserServiceImplement
+    {
+        try {
+            $user = User::findOrFail($id);
+
+            $userRoles = $user->getRoleNames()->toArray();
+            if (in_array('SUPER_ADMIN', $userRoles)) {
+                return $this->setCode(403)
+                    ->setMessage('Cannot toggle active status for super admin users');
+            }
+
+            if (! in_array('ADMIN', $userRoles)) {
+                return $this->setCode(403)
+                    ->setMessage('Can only toggle active status for admin users');
+            }
+
+            $user->update([
+                'is_active' => ! $user->is_active,
+            ]);
+
+            return $this->setCode(200)
+                ->setMessage('Admin status updated successfully')
+                ->setData([
+                    'user' => new UserResource($user->load('roles')),
+                ]);
+        } catch (\Exception $e) {
+            return $this->setCode(500)
+                ->setMessage('An error occurred while updating admin status')
                 ->setError($e->getMessage());
         }
     }
@@ -167,7 +201,7 @@ class UserServiceImplement extends ServiceApi implements UserService
             $user = User::findOrFail($id);
 
             $userRoles = $user->getRoleNames()->toArray();
-            if (!in_array('ADMIN', $userRoles) || in_array('SUPER_ADMIN', $userRoles)) {
+            if (! in_array('ADMIN', $userRoles) || in_array('SUPER_ADMIN', $userRoles)) {
                 return $this->setCode(403)
                     ->setMessage('Can only update admin users');
             }

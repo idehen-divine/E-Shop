@@ -82,6 +82,23 @@ class UserController extends Controller
     }
 
     /**
+     * Toggle the active status of an admin user.
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function toggleAdminActive(Request $request, string $id)
+    {
+        $result = $this->userService->toggleAdminActive($id);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return $result->toJson();
+        }
+
+        return redirect()->route('admin.admins.index')
+            ->with('success', 'Admin status updated successfully.');
+    }
+
+    /**
      * Update the specified user.
      *
      * @param  \Illuminate\Http\Request  $request
