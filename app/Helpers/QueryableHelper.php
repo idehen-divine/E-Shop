@@ -73,10 +73,12 @@ class QueryableHelper extends Helper
 
     public function validate()
     {
+        $sortByOptions = 'name,sku,price,stock,is_active,is_featured,created_at,updated_at,email';
+
         request()->validate([
             'search' => 'nullable|string|max:255',
             'status' => 'nullable|string',
-            'sort_by' => 'nullable|string|in:first_name,last_name,created_at',
+            'sort_by' => 'nullable|string|in:'.$sortByOptions,
             'sort_order' => 'nullable|string|in:asc,desc',
             'per_page' => 'nullable|integer|min:1|max:100',
         ]);
