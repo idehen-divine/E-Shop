@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Cart\CartService;
 use App\Services\Product\ProductService;
+use App\Services\ProductCategory\ProductCategoryService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -12,30 +13,23 @@ class ProductController extends Controller
 {
     public function __construct(
         protected ProductService $productService,
-        protected CartService $cartService
+        protected CartService $cartService,
+        protected ProductCategoryService $productCategoryService
     ) {}
 
     /**
      * Display a listing of products.
      */
-    public function index(Request $request): Response
+    public function index(Request $request): Response|\Illuminate\Http\JsonResponse
     {
-        $productResult = $this->productService->getAllProducts($request);
-        $cartResult = $this->cartService->getCartItemsMap($request);
-
-        $productData = $productResult->getData();
-        $cartData = $cartResult->getData();
-
-        $products = $productData['products'] ?? null;
-
-        if ($products instanceof \Illuminate\Http\Resources\Json\AnonymousResourceCollection) {
-            $products = $products->toArray($request);
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return $this->productService->getAllProducts($request)->toJson();
         }
 
         return Inertia::render('products/index', [
-            'products' => $products ?? [],
-            'pagination' => $productData['pagination'] ?? null,
-            'cartItems' => $cartData['cartItems'] ?? [],
+            'products' => json_decode($this->productService->getAllProducts($request)->toJson()->getContent(), true),
+            'cart' => json_decode($this->cartService->getCartForUser($request)->toJson()->getContent(), true),
+            'categories' => json_decode($this->productCategoryService->getAllCategories()->toJson()->getContent(), true),
         ]);
     }
 
@@ -44,12 +38,15 @@ class ProductController extends Controller
      *
      * @param  string  $id
      */
-    public function show($id): Response
+    public function show(Request $request, $id): Response|\Illuminate\Http\JsonResponse
     {
-        $result = $this->productService->getProductById($id);
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return $this->productService->getProductById($id)->toJson();
+        }
 
-        return Inertia::render('Products/Show', [
-            'product' => $result->getData()['product'] ?? null,
+        return Inertia::render('products/show', [
+            'product' => json_decode($this->productService->getProductById($id)->toJson()->getContent(), true),
+            'cart' => json_decode($this->cartService->getCartForUser($request)->toJson()->getContent(), true),
         ]);
     }
 
