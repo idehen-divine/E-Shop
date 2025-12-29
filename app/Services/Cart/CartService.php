@@ -8,8 +8,6 @@ interface CartService extends BaseService
 {
     public function getCartForUser($request);
 
-    public function getCartItemsMap($request);
-
     public function addItemToCart($request);
 
     public function updateItem($cartItemId, $quantity);
