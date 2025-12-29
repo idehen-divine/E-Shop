@@ -7,7 +7,6 @@ use App\Services\Product\ProductService;
 use App\Services\ProductCategory\ProductCategoryService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class ProductController extends Controller
 {
@@ -19,8 +18,10 @@ class ProductController extends Controller
 
     /**
      * Display a listing of products.
+     *
+     * @return \Inertia\Response|\Illuminate\Http\JsonResponse
      */
-    public function index(Request $request): Response|\Illuminate\Http\JsonResponse
+    public function index(Request $request)
     {
         if ($request->expectsJson() || $request->is('api/*')) {
             return $this->productService->getAllProducts($request)->toJson();
@@ -37,8 +38,9 @@ class ProductController extends Controller
      * Display the specified product.
      *
      * @param  string  $id
+     * @return \Inertia\Response|\Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, $id): Response|\Illuminate\Http\JsonResponse
+    public function show(Request $request, $id)
     {
         if ($request->expectsJson() || $request->is('api/*')) {
             return $this->productService->getProductById($id)->toJson();
@@ -53,7 +55,7 @@ class ProductController extends Controller
     /**
      * Store a newly created product.
      *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -64,7 +66,7 @@ class ProductController extends Controller
      * Update the specified product.
      *
      * @param  string  $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -75,7 +77,7 @@ class ProductController extends Controller
      * Remove the specified product.
      *
      * @param  string  $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
