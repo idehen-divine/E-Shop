@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -18,8 +17,6 @@ class ProductSeeder extends Seeder
                 'price' => 1199.99,
                 'compare_at_price' => 1299.99,
                 'stock' => 50,
-                'sku' => 'IPH15PM-256',
-                'image' => 'https://placehold.co/800x800/000000/FFFFFF?text=iPhone+15+Pro',
                 'is_featured' => true,
                 'categories' => ['Electronics', 'Smartphones'],
             ],
@@ -28,8 +25,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Premium Android smartphone with S Pen, 200MP camera, and AI features.',
                 'price' => 1099.99,
                 'stock' => 45,
-                'sku' => 'SGS24U-512',
-                'image' => 'https://placehold.co/800x800/1a1a1a/FFFFFF?text=Galaxy+S24',
                 'is_featured' => true,
                 'categories' => ['Electronics', 'Smartphones'],
             ],
@@ -39,8 +34,6 @@ class ProductSeeder extends Seeder
                 'price' => 3499.99,
                 'compare_at_price' => 3699.99,
                 'stock' => 20,
-                'sku' => 'MBP16-M3MAX',
-                'image' => 'https://placehold.co/800x800/2c2c2c/FFFFFF?text=MacBook+Pro',
                 'is_featured' => true,
                 'categories' => ['Electronics', 'Laptops'],
             ],
@@ -49,8 +42,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Premium Windows laptop with InfinityEdge display and powerful performance.',
                 'price' => 1899.99,
                 'stock' => 30,
-                'sku' => 'DXPS15-I9',
-                'image' => 'https://placehold.co/800x800/3a3a3a/FFFFFF?text=Dell+XPS+15',
                 'categories' => ['Electronics', 'Laptops'],
             ],
             [
@@ -59,8 +50,6 @@ class ProductSeeder extends Seeder
                 'price' => 1099.99,
                 'compare_at_price' => 1199.99,
                 'stock' => 40,
-                'sku' => 'IPADPRO-129',
-                'image' => 'https://placehold.co/800x800/4a4a4a/FFFFFF?text=iPad+Pro',
                 'categories' => ['Electronics', 'Tablets'],
             ],
             [
@@ -68,8 +57,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Premium Android tablet with S Pen and Dynamic AMOLED display.',
                 'price' => 799.99,
                 'stock' => 35,
-                'sku' => 'GTABS9-256',
-                'image' => 'https://placehold.co/800x800/5a5a5a/FFFFFF?text=Galaxy+Tab',
                 'categories' => ['Electronics', 'Tablets'],
             ],
             [
@@ -77,8 +64,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Advanced health and fitness tracking with always-on Retina display.',
                 'price' => 399.99,
                 'stock' => 60,
-                'sku' => 'AW9-45MM',
-                'image' => 'https://placehold.co/800x800/6a6a6a/FFFFFF?text=Apple+Watch',
                 'is_featured' => true,
                 'categories' => ['Electronics', 'Wearables'],
             ],
@@ -87,8 +72,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Professional full-frame mirrorless camera with 33MP sensor.',
                 'price' => 2499.99,
                 'stock' => 15,
-                'sku' => 'SONYA7IV-BODY',
-                'image' => 'https://placehold.co/800x800/7a7a7a/FFFFFF?text=Sony+A7+IV',
                 'categories' => ['Electronics', 'Cameras'],
             ],
             [
@@ -97,8 +80,6 @@ class ProductSeeder extends Seeder
                 'price' => 399.99,
                 'compare_at_price' => 449.99,
                 'stock' => 80,
-                'sku' => 'SONYMX5-BLK',
-                'image' => 'https://placehold.co/800x800/8a8a8a/FFFFFF?text=Sony+XM5',
                 'is_featured' => true,
                 'categories' => ['Electronics', 'Audio'],
             ],
@@ -107,8 +88,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Active noise cancellation with transparency mode and spatial audio.',
                 'price' => 249.99,
                 'stock' => 100,
-                'sku' => 'APPRO2-USB',
-                'image' => 'https://placehold.co/800x800/9a9a9a/FFFFFF?text=AirPods+Pro',
                 'categories' => ['Electronics', 'Audio'],
             ],
             [
@@ -116,8 +95,6 @@ class ProductSeeder extends Seeder
                 'description' => '100% cotton comfortable fit t-shirt available in multiple colors.',
                 'price' => 29.99,
                 'stock' => 200,
-                'sku' => 'MTEE-CLR-L',
-                'image' => 'https://placehold.co/800x800/a1a1a1/FFFFFF?text=Classic+Tee',
                 'categories' => ['Clothing', 'Men\'s Apparel'],
             ],
             [
@@ -126,8 +103,6 @@ class ProductSeeder extends Seeder
                 'price' => 79.99,
                 'compare_at_price' => 99.99,
                 'stock' => 75,
-                'sku' => 'WDRS-SUM-M',
-                'image' => 'https://placehold.co/800x800/b1b1b1/FFFFFF?text=Summer+Dress',
                 'categories' => ['Clothing', 'Women\'s Apparel'],
             ],
             [
@@ -135,8 +110,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Warm waterproof jacket with hood for cold weather.',
                 'price' => 59.99,
                 'stock' => 90,
-                'sku' => 'KJKT-WIN-10',
-                'image' => 'https://placehold.co/800x800/c1c1c1/FFFFFF?text=Kids+Jacket',
                 'categories' => ['Clothing', 'Kids\' Clothing'],
             ],
             [
@@ -145,8 +118,6 @@ class ProductSeeder extends Seeder
                 'price' => 129.99,
                 'compare_at_price' => 149.99,
                 'stock' => 120,
-                'sku' => 'RUNPRO-10',
-                'image' => 'https://placehold.co/800x800/d1d1d1/FFFFFF?text=Running+Shoes',
                 'is_featured' => true,
                 'categories' => ['Clothing', 'Footwear', 'Sports & Outdoors'],
             ],
@@ -155,8 +126,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Genuine leather bifold wallet with multiple card slots.',
                 'price' => 49.99,
                 'stock' => 150,
-                'sku' => 'WALL-LEATH-BRN',
-                'image' => 'https://placehold.co/800x800/e1e1e1/FFFFFF?text=Leather+Wallet',
                 'categories' => ['Clothing', 'Accessories'],
             ],
             [
@@ -165,8 +134,6 @@ class ProductSeeder extends Seeder
                 'price' => 899.99,
                 'compare_at_price' => 1099.99,
                 'stock' => 25,
-                'sku' => 'SOFA-MOD-GRY',
-                'image' => 'https://placehold.co/800x800/f1f1f1/000000?text=Modern+Sofa',
                 'categories' => ['Home & Garden', 'Furniture'],
             ],
             [
@@ -174,8 +141,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Solid oak coffee table with rustic finish.',
                 'price' => 299.99,
                 'stock' => 40,
-                'sku' => 'CTBL-OAK-48',
-                'image' => 'https://placehold.co/800x800/a2a2a2/FFFFFF?text=Coffee+Table',
                 'categories' => ['Home & Garden', 'Furniture'],
             ],
             [
@@ -183,8 +148,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Set of 3 modern abstract canvas prints.',
                 'price' => 149.99,
                 'stock' => 60,
-                'sku' => 'ART-CAN-SET3',
-                'image' => 'https://placehold.co/800x800/b2b2b2/FFFFFF?text=Canvas+Art',
                 'categories' => ['Home & Garden', 'Decor'],
             ],
             [
@@ -192,8 +155,6 @@ class ProductSeeder extends Seeder
                 'description' => '16-piece ceramic dinnerware set for 4 people.',
                 'price' => 89.99,
                 'stock' => 70,
-                'sku' => 'DINR-CER-16',
-                'image' => 'https://placehold.co/800x800/c2c2c2/FFFFFF?text=Dinnerware',
                 'categories' => ['Home & Garden', 'Kitchenware'],
             ],
             [
@@ -202,8 +163,6 @@ class ProductSeeder extends Seeder
                 'price' => 199.99,
                 'compare_at_price' => 249.99,
                 'stock' => 50,
-                'sku' => 'BED-LUX-QUEEN',
-                'image' => 'https://placehold.co/800x800/d2d2d2/FFFFFF?text=Bedding+Set',
                 'categories' => ['Home & Garden', 'Bedding'],
             ],
             [
@@ -211,8 +170,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Complete 10-piece gardening tool set with carrying case.',
                 'price' => 79.99,
                 'stock' => 85,
-                'sku' => 'GTOOL-SET10',
-                'image' => 'https://placehold.co/800x800/e2e2e2/FFFFFF?text=Garden+Tools',
                 'categories' => ['Home & Garden', 'Gardening Tools'],
             ],
             [
@@ -220,8 +177,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Waterproof LED string lights for indoor and outdoor use.',
                 'price' => 34.99,
                 'stock' => 150,
-                'sku' => 'LED-STR-50FT',
-                'image' => 'https://placehold.co/800x800/f2f2f2/000000?text=LED+Lights',
                 'categories' => ['Home & Garden', 'Lighting'],
             ],
             [
@@ -229,8 +184,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Non-slip eco-friendly yoga mat with carrying strap.',
                 'price' => 49.99,
                 'stock' => 100,
-                'sku' => 'YOGA-MAT-6MM',
-                'image' => 'https://placehold.co/800x800/a3a3a3/FFFFFF?text=Yoga+Mat',
                 'categories' => ['Sports & Outdoors', 'Fitness Equipment'],
             ],
             [
@@ -238,8 +191,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Waterproof camping tent with easy setup system.',
                 'price' => 199.99,
                 'stock' => 45,
-                'sku' => 'TENT-CAM-4P',
-                'image' => 'https://placehold.co/800x800/b3b3b3/FFFFFF?text=Camping+Tent',
                 'categories' => ['Sports & Outdoors', 'Camping Gear'],
             ],
             [
@@ -248,8 +199,6 @@ class ProductSeeder extends Seeder
                 'price' => 499.99,
                 'compare_at_price' => 599.99,
                 'stock' => 30,
-                'sku' => 'BIKE-MTN-27',
-                'image' => 'https://placehold.co/800x800/c3c3c3/FFFFFF?text=Mountain+Bike',
                 'is_featured' => true,
                 'categories' => ['Sports & Outdoors', 'Cycling'],
             ],
@@ -258,8 +207,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Official size 7 basketball for indoor and outdoor use.',
                 'price' => 39.99,
                 'stock' => 120,
-                'sku' => 'BBALL-OFF-7',
-                'image' => 'https://placehold.co/800x800/d3d3d3/FFFFFF?text=Basketball',
                 'categories' => ['Sports & Outdoors', 'Team Sports'],
             ],
             [
@@ -267,8 +214,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Waterproof breathable hiking jacket with multiple pockets.',
                 'price' => 129.99,
                 'stock' => 65,
-                'sku' => 'HJKT-PRO-L',
-                'image' => 'https://placehold.co/800x800/e3e3e3/FFFFFF?text=Hiking+Jacket',
                 'categories' => ['Sports & Outdoors', 'Outdoor Apparel'],
             ],
             [
@@ -276,8 +221,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Bestselling fiction novel by renowned author.',
                 'price' => 24.99,
                 'stock' => 200,
-                'sku' => 'BOOK-FIC-001',
-                'image' => 'https://placehold.co/800x800/f3f3f3/000000?text=Novel',
                 'categories' => ['Books & Media', 'Fiction'],
             ],
             [
@@ -285,8 +228,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Comprehensive guide to modern business strategies.',
                 'price' => 34.99,
                 'stock' => 150,
-                'sku' => 'BOOK-BUS-002',
-                'image' => 'https://placehold.co/800x800/a4a4a4/FFFFFF?text=Business+Book',
                 'categories' => ['Books & Media', 'Non-Fiction'],
             ],
             [
@@ -294,8 +235,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Dedicated audiobook player with long battery life.',
                 'price' => 149.99,
                 'stock' => 40,
-                'sku' => 'ABOOK-PLAY-01',
-                'image' => 'https://placehold.co/800x800/b4b4b4/FFFFFF?text=Audio+Player',
                 'categories' => ['Books & Media', 'Audiobooks'],
             ],
             [
@@ -304,8 +243,6 @@ class ProductSeeder extends Seeder
                 'price' => 79.99,
                 'compare_at_price' => 99.99,
                 'stock' => 55,
-                'sku' => 'MOV-CLAS-BR10',
-                'image' => 'https://placehold.co/800x800/c4c4c4/FFFFFF?text=Movie+Collection',
                 'categories' => ['Books & Media', 'Movies'],
             ],
             [
@@ -313,8 +250,6 @@ class ProductSeeder extends Seeder
                 'description' => '500-piece creative building blocks for ages 6+.',
                 'price' => 49.99,
                 'stock' => 180,
-                'sku' => 'TOY-BLK-500',
-                'image' => 'https://placehold.co/800x800/d4d4d4/FFFFFF?text=Building+Blocks',
                 'categories' => ['Toys & Games', 'Educational Toys'],
             ],
             [
@@ -322,8 +257,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Collectible action figure with accessories.',
                 'price' => 29.99,
                 'stock' => 220,
-                'sku' => 'TOY-ACT-SH01',
-                'image' => 'https://placehold.co/800x800/e4e4e4/FFFFFF?text=Action+Figure',
                 'categories' => ['Toys & Games', 'Action Figures'],
             ],
             [
@@ -331,8 +264,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Award-winning strategy board game for 2-4 players.',
                 'price' => 59.99,
                 'stock' => 95,
-                'sku' => 'GAME-BRD-STR',
-                'image' => 'https://placehold.co/800x800/f4f4f4/000000?text=Board+Game',
                 'categories' => ['Toys & Games', 'Board Games'],
             ],
             [
@@ -340,8 +271,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Beautiful landscape jigsaw puzzle.',
                 'price' => 24.99,
                 'stock' => 130,
-                'sku' => 'PUZ-JIG-1000',
-                'image' => 'https://placehold.co/800x800/a5a5a5/FFFFFF?text=Jigsaw+Puzzle',
                 'categories' => ['Toys & Games', 'Puzzles'],
             ],
             [
@@ -349,8 +278,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Fashion doll with wardrobe and accessories.',
                 'price' => 39.99,
                 'stock' => 160,
-                'sku' => 'TOY-DOLL-FSH',
-                'image' => 'https://placehold.co/800x800/b5b5b5/FFFFFF?text=Fashion+Doll',
                 'categories' => ['Toys & Games', 'Dolls'],
             ],
             [
@@ -358,8 +285,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Brightening vitamin C serum for all skin types.',
                 'price' => 34.99,
                 'stock' => 200,
-                'sku' => 'SKIN-VITC-30',
-                'image' => 'https://placehold.co/800x800/c5c5c5/FFFFFF?text=Vitamin+C',
                 'is_featured' => true,
                 'categories' => ['Beauty & Health', 'Skincare'],
             ],
@@ -368,8 +293,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Deep conditioning hair mask with keratin and argan oil.',
                 'price' => 29.99,
                 'stock' => 175,
-                'sku' => 'HAIR-MASK-KER',
-                'image' => 'https://placehold.co/800x800/d5d5d5/FFFFFF?text=Hair+Mask',
                 'categories' => ['Beauty & Health', 'Haircare'],
             ],
             [
@@ -378,8 +301,6 @@ class ProductSeeder extends Seeder
                 'price' => 49.99,
                 'compare_at_price' => 69.99,
                 'stock' => 140,
-                'sku' => 'MAKE-PAL-48',
-                'image' => 'https://placehold.co/800x800/e5e5e5/FFFFFF?text=Makeup+Palette',
                 'categories' => ['Beauty & Health', 'Makeup'],
             ],
             [
@@ -387,8 +308,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Premium eau de parfum with floral notes.',
                 'price' => 89.99,
                 'stock' => 100,
-                'sku' => 'PERF-LUX-50ML',
-                'image' => 'https://placehold.co/800x800/f5f5f5/000000?text=Perfume',
                 'categories' => ['Beauty & Health', 'Fragrances'],
             ],
             [
@@ -396,8 +315,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Complete daily multivitamin supplement, 90 tablets.',
                 'price' => 24.99,
                 'stock' => 250,
-                'sku' => 'VIT-MULTI-90',
-                'image' => 'https://placehold.co/800x800/a6a6a6/FFFFFF?text=Multivitamin',
                 'categories' => ['Beauty & Health', 'Vitamins & Supplements'],
             ],
             [
@@ -405,8 +322,6 @@ class ProductSeeder extends Seeder
                 'description' => '1kg premium arabica coffee beans, medium roast.',
                 'price' => 19.99,
                 'stock' => 300,
-                'sku' => 'COF-ORG-1KG',
-                'image' => 'https://placehold.co/800x800/b6b6b6/FFFFFF?text=Coffee+Beans',
                 'categories' => ['Food & Beverages', 'Coffee & Tea'],
             ],
             [
@@ -414,8 +329,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Premium green tea variety pack with 40 bags.',
                 'price' => 14.99,
                 'stock' => 280,
-                'sku' => 'TEA-GRN-40',
-                'image' => 'https://placehold.co/800x800/c6c6c6/FFFFFF?text=Green+Tea',
                 'categories' => ['Food & Beverages', 'Coffee & Tea'],
             ],
             [
@@ -423,8 +336,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Premium roasted mixed nuts, 500g resealable bag.',
                 'price' => 12.99,
                 'stock' => 350,
-                'sku' => 'SNK-NUT-500G',
-                'image' => 'https://placehold.co/800x800/d6d6d6/FFFFFF?text=Mixed+Nuts',
                 'categories' => ['Food & Beverages', 'Snacks'],
             ],
             [
@@ -432,8 +343,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Natural sparkling water, 12 x 500ml bottles.',
                 'price' => 9.99,
                 'stock' => 400,
-                'sku' => 'DRK-SPK-12',
-                'image' => 'https://placehold.co/800x800/e6e6e6/FFFFFF?text=Sparkling+Water',
                 'categories' => ['Food & Beverages', 'Drinks'],
             ],
             [
@@ -442,8 +351,6 @@ class ProductSeeder extends Seeder
                 'price' => 49.99,
                 'compare_at_price' => 59.99,
                 'stock' => 75,
-                'sku' => 'GOUR-CHS-5',
-                'image' => 'https://placehold.co/800x800/f6f6f6/000000?text=Cheese+Collection',
                 'categories' => ['Food & Beverages', 'Gourmet Foods'],
             ],
             [
@@ -451,8 +358,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Fast wireless charging stand compatible with all Qi devices.',
                 'price' => 39.99,
                 'stock' => 180,
-                'sku' => 'CHG-WRL-FAST',
-                'image' => 'https://placehold.co/800x800/a7a7a7/FFFFFF?text=Wireless+Charger',
                 'categories' => ['Electronics'],
             ],
             [
@@ -460,8 +365,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Central control hub for all your smart home devices.',
                 'price' => 129.99,
                 'stock' => 95,
-                'sku' => 'SMART-HUB-01',
-                'image' => 'https://placehold.co/800x800/b7b7b7/FFFFFF?text=Smart+Hub',
                 'is_featured' => true,
                 'categories' => ['Electronics'],
             ],
@@ -470,8 +373,6 @@ class ProductSeeder extends Seeder
                 'description' => '20000mAh portable power bank with dual USB ports.',
                 'price' => 49.99,
                 'stock' => 250,
-                'sku' => 'PWR-BNK-20K',
-                'image' => 'https://placehold.co/800x800/c7c7c7/FFFFFF?text=Power+Bank',
                 'categories' => ['Electronics'],
             ],
             [
@@ -480,8 +381,6 @@ class ProductSeeder extends Seeder
                 'price' => 79.99,
                 'compare_at_price' => 99.99,
                 'stock' => 140,
-                'sku' => 'GAM-MSE-RGB',
-                'image' => 'https://placehold.co/800x800/d7d7d7/FFFFFF?text=Gaming+Mouse',
                 'categories' => ['Electronics'],
             ],
             [
@@ -489,8 +388,6 @@ class ProductSeeder extends Seeder
                 'description' => 'RGB mechanical keyboard with blue switches.',
                 'price' => 149.99,
                 'stock' => 110,
-                'sku' => 'KBD-MECH-RGB',
-                'image' => 'https://placehold.co/800x800/e7e7e7/FFFFFF?text=Keyboard',
                 'is_featured' => true,
                 'categories' => ['Electronics'],
             ],
@@ -499,8 +396,6 @@ class ProductSeeder extends Seeder
         foreach ($products as $productData) {
             $categoryNames = $productData['categories'];
             unset($productData['categories']);
-
-            $productData['slug'] = Str::slug($productData['name']);
 
             $product = Product::create($productData);
 
