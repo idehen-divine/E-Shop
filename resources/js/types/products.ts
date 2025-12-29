@@ -1,5 +1,5 @@
 export interface Category {
-    id: number;
+    id: string;
     name: string;
     slug: string;
 }
@@ -12,12 +12,16 @@ export interface Product {
     price: string;
     compare_at_price: string | null;
     stock: number;
+    sku: string | null;
     image: string | null;
+    images: string[] | null;
+    is_active: boolean;
     is_featured: boolean;
     in_stock: boolean;
     has_discount: boolean;
     discount_percentage: number | null;
     categories: Category[];
+    created_at?: string;
 }
 
 export interface Pagination {
@@ -41,5 +45,6 @@ export interface ProductsIndexProps {
     products: Product[];
     pagination: Pagination | null;
     cartItems?: Record<string, CartItem>;
+    categories?: Category[];
 }
 
