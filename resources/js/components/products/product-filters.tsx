@@ -6,12 +6,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { formatCategoryName, getAllCategories } from '@/utils/products';
-import { type Product } from '@/types/products';
+import { type Category } from '@/types/products';
 import { Search } from 'lucide-react';
 
 interface ProductFiltersProps {
-    products: Product[];
+    categories: Category[];
     searchQuery: string;
     selectedCategory: string;
     priceRange: string;
@@ -21,7 +20,7 @@ interface ProductFiltersProps {
 }
 
 export function ProductFilters({
-    products,
+    categories = [],
     searchQuery,
     selectedCategory,
     priceRange,
@@ -29,7 +28,6 @@ export function ProductFilters({
     onCategoryChange,
     onPriceRangeChange,
 }: ProductFiltersProps) {
-    const allCategories = getAllCategories(products);
 
     return (
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -52,9 +50,9 @@ export function ProductFilters({
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All Categories</SelectItem>
-                        {allCategories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                                {formatCategoryName(category)}
+                        {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.slug}>
+                                {category.name}
                             </SelectItem>
                         ))}
                     </SelectContent>
