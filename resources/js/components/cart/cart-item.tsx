@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { DeleteCartItemDialog } from '@/components/cart/delete-cart-item-dialog';
 import { useCartActions } from '@/hooks/use-cart-actions';
+import products from '@/routes/products';
 import { Link } from '@inertiajs/react';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -38,27 +39,31 @@ export function CartItem({
         setShowDeleteDialog(false);
     };
 
+    const productUrl = products.show(product.id).url;
+
     return (
         <Card>
             <CardContent className="p-4 sm:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row">
                     <div className="flex-shrink-0">
-                        <img
-                            src={
-                                product.image ||
-                                'https://via.placeholder.com/150x150?text=Product'
-                            }
-                            alt={product.name}
-                            className="h-32 w-full rounded-md object-cover sm:w-32"
-                        />
+                        <Link href={productUrl}>
+                            <img
+                                src={
+                                    product.image ||
+                                    'https://via.placeholder.com/150x150?text=Product'
+                                }
+                                alt={product.name}
+                                className="h-32 w-full cursor-pointer rounded-md object-cover transition-opacity hover:opacity-80 sm:w-32"
+                            />
+                        </Link>
                     </div>
 
                     <div className="flex flex-1 flex-col justify-between gap-4 sm:flex-row">
                         <div className="flex-1">
                             <h3 className="mb-1 text-lg font-semibold">
                                 <Link
-                                    href={`/products/${product.id}`}
-                                    className="hover:text-primary"
+                                    href={productUrl}
+                                    className="transition-colors hover:text-primary"
                                 >
                                     {product.name}
                                 </Link>
