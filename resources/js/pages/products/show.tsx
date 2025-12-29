@@ -1,33 +1,62 @@
+import { DeleteCartItemDialog } from '@/components/cart/delete-cart-item-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { DeleteCartItemDialog } from '@/components/cart/delete-cart-item-dialog';
 import { useCartActions } from '@/hooks/use-cart-actions';
 import ShopLayout from '@/layouts/app/shop-layout';
 import { home } from '@/routes';
 import products from '@/routes/products';
 import { type BreadcrumbItem } from '@/types';
-import { type Product, type CartItem } from '@/types/products';
+import { type CartItem, type Product } from '@/types/products';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-interface ProductShowProps {
-    product: Product | null;
-    cartItems?: Record<string, CartItem>;
+interface ServiceResponse<T> {
+    code: number;
+    message: string;
+    data?: T;
+    error?: string;
 }
 
 export default function ProductShow({
     product,
-    cartItems = {},
-}: ProductShowProps) {
-    const { addToCart, updateQuantity, removeItem, addingToCart, updatingItems } =
-        useCartActions();
+    cart,
+}: {
+    product?: ServiceResponse<{ product: Product }>;
+    cart?: ServiceResponse<{ cart: { items: CartItem[] } }>;
+}) {
+    const productData = (product as ServiceResponse<{ product: Product }>)?.data?.product || null;
+    const cartData = (cart as ServiceResponse<{ cart: { items: CartItem[] } }>)?.data?.cart;
+
+    const cartItems = useMemo(() => {
+        if (cartData?.items && Array.isArray(cartData.items)) {
+            return cartData.items;
+        }
+        return [];
+    }, [cartData?.items]);
+
+    const {
+        addToCart,
+        updateQuantity,
+        removeItem,
+        addingToCart,
+        updatingItems,
+    } = useCartActions();
     const [quantity, setQuantity] = useState(1);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-    if (!product) {
+    const cartItem = useMemo(() => {
+        if (!productData) {
+            return undefined;
+        }
+        return Array.isArray(cartItems)
+            ? cartItems.find((item) => item.product.id === productData.id)
+            : undefined;
+    }, [cartItems, productData]);
+
+    if (!productData) {
         return (
             <ShopLayout>
                 <Head title="Product Not Found" />
@@ -41,9 +70,7 @@ export default function ProductShow({
                             The product you're looking for doesn't exist
                         </p>
                         <Button asChild>
-                            <Link href={home().url}>
-                                Back to Products
-                            </Link>
+                            <Link href={home().url}>Back to Products</Link>
                         </Button>
                     </div>
                 </div>
@@ -51,29 +78,28 @@ export default function ProductShow({
         );
     }
 
-    const cartItem = cartItems[product.id];
     const isInCart = !!cartItem;
-    const isAdding = addingToCart.has(product.id);
+    const isAdding = addingToCart.has(productData.id);
     const isUpdating = cartItem ? updatingItems.has(cartItem.id) : false;
 
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity < 1) {
             return;
         }
-        if (newQuantity > product.stock) {
-            newQuantity = product.stock;
+        if (newQuantity > productData.stock) {
+            newQuantity = productData.stock;
         }
         setQuantity(newQuantity);
     };
 
     const handleAddToCart = () => {
-        addToCart(product.id, quantity);
+        addToCart(productData.id, quantity);
         setQuantity(1);
     };
 
     const handleUpdateQuantity = (newQuantity: number) => {
         if (cartItem) {
-            updateQuantity(cartItem.id, newQuantity, product.stock);
+            updateQuantity(cartItem.id, newQuantity, productData.stock);
         }
     };
 
@@ -90,14 +116,14 @@ export default function ProductShow({
             href: home().url,
         },
         {
-            title: product.name,
-            href: products.show(product.id).url,
+            title: productData.name,
+            href: products.show(productData.id).url,
         },
     ];
 
     return (
         <ShopLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${product.name} - E-Commerce Store`} />
+            <Head title={`${productData.name} - E-Commerce Store`} />
             <div className="mx-auto w-full max-w-[1536px] py-6">
                 <Button
                     variant="ghost"
@@ -113,52 +139,60 @@ export default function ProductShow({
                         <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-muted">
                             <img
                                 src={
-                                    product.image ||
+                                    productData.image ||
                                     'https://via.placeholder.com/600x600?text=Product+Image'
                                 }
-                                alt={product.name}
+                                alt={productData.name}
                                 className="h-full w-full object-cover object-center"
                             />
-                            {!product.in_stock && (
+                            {!productData.in_stock && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-                                    <Badge variant="secondary" className="text-lg">
+                                    <Badge
+                                        variant="secondary"
+                                        className="text-lg"
+                                    >
                                         Out of Stock
                                     </Badge>
                                 </div>
                             )}
-                            {product.has_discount && product.discount_percentage && (
-                                <div className="absolute top-4 left-4">
-                                    <Badge
-                                        variant="destructive"
-                                        className="text-sm font-semibold"
-                                    >
-                                        -{product.discount_percentage}% OFF
-                                    </Badge>
-                                </div>
-                            )}
+                            {productData.has_discount &&
+                                productData.discount_percentage && (
+                                    <div className="absolute top-4 left-4">
+                                        <Badge
+                                            variant="destructive"
+                                            className="text-sm font-semibold"
+                                        >
+                                            -{productData.discount_percentage}%
+                                            OFF
+                                        </Badge>
+                                    </div>
+                                )}
                         </div>
                     </div>
 
                     <div className="space-y-6">
                         <div>
-                            {product.categories && product.categories.length > 0 && (
-                                <div className="mb-4 flex flex-wrap gap-2">
-                                    {product.categories.map((category) => (
-                                        <Badge
-                                            key={category.id}
-                                            variant="outline"
-                                        >
-                                            {category.name}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            )}
+                            {productData.categories &&
+                                productData.categories.length > 0 && (
+                                    <div className="mb-4 flex flex-wrap gap-2">
+                                        {productData.categories.map(
+                                            (category) => (
+                                                <Badge
+                                                    key={category.id}
+                                                    variant="outline"
+                                                >
+                                                    {category.name}
+                                                </Badge>
+                                            ),
+                                        )}
+                                    </div>
+                                )}
                             <h1 className="mb-4 text-4xl font-bold">
-                                {product.name}
+                                {productData.name}
                             </h1>
-                            {product.description && (
+                            {productData.description && (
                                 <p className="mb-6 text-lg text-muted-foreground">
-                                    {product.description}
+                                    {productData.description}
                                 </p>
                             )}
                         </div>
@@ -168,12 +202,15 @@ export default function ProductShow({
                                 <div className="space-y-6">
                                     <div className="flex items-baseline gap-4">
                                         <span className="text-4xl font-bold text-primary">
-                                            ${product.price}
+                                            ${productData.price}
                                         </span>
-                                        {product.has_discount &&
-                                            product.compare_at_price && (
+                                        {productData.has_discount &&
+                                            productData.compare_at_price && (
                                                 <span className="text-xl text-muted-foreground line-through">
-                                                    ${product.compare_at_price}
+                                                    $
+                                                    {
+                                                        productData.compare_at_price
+                                                    }
                                                 </span>
                                             )}
                                     </div>
@@ -181,16 +218,16 @@ export default function ProductShow({
                                     <div className="flex items-center gap-4">
                                         <span
                                             className={`text-sm font-medium ${
-                                                product.stock < 10
+                                                productData.stock < 10
                                                     ? 'text-red-600'
                                                     : 'text-green-600'
                                             }`}
                                         >
-                                            {product.stock} in stock
+                                            {productData.stock} in stock
                                         </span>
-                                        {product.sku && (
+                                        {productData.sku && (
                                             <span className="text-sm text-muted-foreground">
-                                                SKU: {product.sku}
+                                                SKU: {productData.sku}
                                             </span>
                                         )}
                                     </div>
@@ -220,18 +257,22 @@ export default function ProductShow({
                                                     <Input
                                                         type="number"
                                                         min="1"
-                                                        max={product.stock}
-                                                        value={cartItem.quantity}
+                                                        max={productData.stock}
+                                                        value={
+                                                            cartItem.quantity
+                                                        }
                                                         onChange={(e) => {
                                                             e.stopPropagation();
-                                                            const value = parseInt(
-                                                                e.target.value,
-                                                            );
+                                                            const value =
+                                                                parseInt(
+                                                                    e.target
+                                                                        .value,
+                                                                );
                                                             if (
                                                                 !isNaN(value) &&
                                                                 value >= 1 &&
                                                                 value <=
-                                                                    product.stock
+                                                                    productData.stock
                                                             ) {
                                                                 handleUpdateQuantity(
                                                                     value,
@@ -247,7 +288,7 @@ export default function ProductShow({
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-10 w-10 rounded-none cursor-pointer"
+                                                        className="h-10 w-10 cursor-pointer rounded-none"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             handleUpdateQuantity(
@@ -257,7 +298,7 @@ export default function ProductShow({
                                                         }}
                                                         disabled={
                                                             cartItem.quantity >=
-                                                                product.stock ||
+                                                                productData.stock ||
                                                             isUpdating
                                                         }
                                                     >
@@ -269,7 +310,9 @@ export default function ProductShow({
                                                     size="icon"
                                                     className="h-10 w-10 cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive"
                                                     onClick={() =>
-                                                        setShowDeleteDialog(true)
+                                                        setShowDeleteDialog(
+                                                            true,
+                                                        )
                                                     }
                                                     disabled={isUpdating}
                                                 >
@@ -278,9 +321,11 @@ export default function ProductShow({
                                             </div>
                                             <DeleteCartItemDialog
                                                 open={showDeleteDialog}
-                                                onOpenChange={setShowDeleteDialog}
+                                                onOpenChange={
+                                                    setShowDeleteDialog
+                                                }
                                                 onConfirm={handleDeleteConfirm}
-                                                itemName={product.name}
+                                                itemName={productData.name}
                                                 isDeleting={isUpdating}
                                             />
                                         </div>
@@ -304,17 +349,19 @@ export default function ProductShow({
                                                     <Input
                                                         type="number"
                                                         min="1"
-                                                        max={product.stock}
+                                                        max={productData.stock}
                                                         value={quantity}
                                                         onChange={(e) => {
-                                                            const value = parseInt(
-                                                                e.target.value,
-                                                            );
+                                                            const value =
+                                                                parseInt(
+                                                                    e.target
+                                                                        .value,
+                                                                );
                                                             if (
                                                                 !isNaN(value) &&
                                                                 value >= 1 &&
                                                                 value <=
-                                                                    product.stock
+                                                                    productData.stock
                                                             ) {
                                                                 handleQuantityChange(
                                                                     value,
@@ -326,7 +373,7 @@ export default function ProductShow({
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-10 w-10 rounded-none cursor-pointer"
+                                                        className="h-10 w-10 cursor-pointer rounded-none"
                                                         onClick={() =>
                                                             handleQuantityChange(
                                                                 quantity + 1,
@@ -334,7 +381,7 @@ export default function ProductShow({
                                                         }
                                                         disabled={
                                                             quantity >=
-                                                            product.stock
+                                                            productData.stock
                                                         }
                                                     >
                                                         <Plus className="h-4 w-4" />
@@ -345,13 +392,14 @@ export default function ProductShow({
                                                 className="w-full"
                                                 size="lg"
                                                 disabled={
-                                                    !product.in_stock || isAdding
+                                                    !productData.in_stock ||
+                                                    isAdding
                                                 }
                                                 onClick={handleAddToCart}
                                             >
                                                 {isAdding
                                                     ? 'Adding...'
-                                                    : product.in_stock
+                                                    : productData.in_stock
                                                       ? 'Add to Cart'
                                                       : 'Out of Stock'}
                                             </Button>
@@ -366,4 +414,3 @@ export default function ProductShow({
         </ShopLayout>
     );
 }
-

@@ -21,17 +21,27 @@ interface CartItemData {
     subtotal: string;
 }
 
-interface CartPageProps {
-    cart: {
-        id: string;
-        items?: CartItemData[];
-        total: string;
-        item_count: number;
-    };
+interface ServiceResponse<T> {
+    code: number;
+    message: string;
+    data?: T;
+    error?: string;
 }
 
-export default function CartIndex({ cart }: CartPageProps) {
-    const cartItems = Array.isArray(cart.items) ? cart.items : [];
+export default function CartIndex({
+    cart,
+}: {
+    cart?: ServiceResponse<{ cart: { id: string; items?: CartItemData[]; total: string; item_count: number } }>;
+}) {
+    const cartData = (cart as ServiceResponse<{ cart: { id: string; items?: CartItemData[]; total: string; item_count: number } }>)?.data?.cart;
+    const cartItems = useMemo(() => {
+        if (cartData?.items && Array.isArray(cartData.items)) {
+            return cartData.items;
+        }
+        return [];
+    }, [cartData?.items]);
+
+    const finalCartData = cartData || { id: '', items: [], total: '0', item_count: 0 };
     const { auth } = usePage<SharedData>().props;
     const isAuthenticated = !!auth.user;
 
@@ -74,8 +84,8 @@ export default function CartIndex({ cart }: CartPageProps) {
 
                             <div className="lg:col-span-1">
                                 <CartSummary
-                                    itemCount={cart.item_count}
-                                    total={cart.total}
+                                    itemCount={finalCartData.item_count}
+                                    total={finalCartData.total}
                                     isAuthenticated={isAuthenticated}
                                 />
                             </div>

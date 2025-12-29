@@ -38,13 +38,23 @@ export interface Pagination {
 
 export interface CartItem {
     id: string;
+    product: {
+        id: string;
+        name: string;
+        slug: string;
+        image: string | null;
+        price: string;
+        stock: number;
+    };
     quantity: number;
+    price: string;
+    subtotal: string;
 }
 
 export interface ProductsIndexProps {
     products: Product[];
     pagination: Pagination | null;
-    cartItems?: Record<string, CartItem>;
+    cartItems?: CartItem[];
     categories?: Category[];
 }
 

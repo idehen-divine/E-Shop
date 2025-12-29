@@ -5,10 +5,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useCartActions } from '@/hooks/use-cart-actions';
 import products from '@/routes/products';
-import { type CartItem, type Product } from '@/types/products';
+import { type Product } from '@/types/products';
 import { Link, router } from '@inertiajs/react';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
+
+interface ProductCartItem {
+    id: string;
+    quantity: number;
+}
 
 interface ProductCardActions {
     addToCart: (productId: string) => void;
@@ -24,7 +29,7 @@ interface ProductCardActions {
 
 interface ProductCardProps {
     product: Product;
-    cartItem?: CartItem;
+    cartItem?: ProductCartItem;
     actions?: ProductCardActions;
     showDescription?: boolean;
     showStock?: boolean;
@@ -32,7 +37,7 @@ interface ProductCardProps {
     onProductClick?: (product: Product) => void;
     renderActions?: (props: {
         product: Product;
-        cartItem?: CartItem;
+        cartItem?: ProductCartItem;
         isInCart: boolean;
         isAdding: boolean;
         isUpdating: boolean;
