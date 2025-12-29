@@ -26,11 +26,7 @@ class ProductResource extends JsonResource
             'has_discount' => $this->hasDiscount(),
             'discount_percentage' => $this->getDiscountPercentage(),
             'categories' => $this->whenLoaded('categories', function () {
-                return $this->categories->map(fn ($category) => [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                ]);
+                return CategoryResource::collection($this->categories);
             }),
             'created_at' => $this->created_at,
         ];
