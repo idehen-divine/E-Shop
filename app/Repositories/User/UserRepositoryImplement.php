@@ -23,28 +23,88 @@ class UserRepositoryImplement extends Eloquent implements UserRepository
     /**
      * Get all regular users (excluding ADMIN and SUPER_ADMIN).
      */
-    public function getRegularUsers()
+    public function getRegularUsers($request = null)
     {
-        return $this->model->with('roles')
-            ->whereDoesntHave('roles', function ($query) {
+        $request = $request ?? request();
+        if (! $request->has('per_page')) {
+            $request->merge(['per_page' => 10]);
+        }
+
+        return helpers()->queryableHelper()->fetchWithFilters($this->model, function ($query) use ($request) {
+            $query->with('roles');
+
+            if ($request->filled('search')) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('name', 'like', '%'.$request->search.'%')
+                        ->orWhere('email', 'like', '%'.$request->search.'%');
+                });
+            }
+
+            if ($request->filled('status') && $request->status !== 'all') {
+                if ($request->status === 'active') {
+                    $query->where('is_active', true);
+                } elseif ($request->status === 'inactive') {
+                    $query->where('is_active', false);
+                }
+            }
+
+            if ($request->filled('verified') && $request->verified !== 'all') {
+                if ($request->verified === 'verified') {
+                    $query->whereNotNull('email_verified_at');
+                } elseif ($request->verified === 'unverified') {
+                    $query->whereNull('email_verified_at');
+                }
+            }
+
+            $query->whereDoesntHave('roles', function ($query) {
                 $query->whereIn('name', ['SUPER_ADMIN', 'ADMIN']);
-            })
-            ->get();
+            });
+        });
     }
 
     /**
      * Get all admin users (excluding SUPER_ADMIN).
      */
-    public function getAdminUsers()
+    public function getAdminUsers($request = null)
     {
-        return $this->model->with('roles')
-            ->whereHas('roles', function ($query) {
+        $request = $request ?? request();
+        if (! $request->has('per_page')) {
+            $request->merge(['per_page' => 10]);
+        }
+
+        return helpers()->queryableHelper()->fetchWithFilters($this->model, function ($query) use ($request) {
+            $query->with('roles');
+
+            if ($request->filled('search')) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('name', 'like', '%'.$request->search.'%')
+                        ->orWhere('email', 'like', '%'.$request->search.'%');
+                });
+            }
+
+            if ($request->filled('status') && $request->status !== 'all') {
+                if ($request->status === 'active') {
+                    $query->where('is_active', true);
+                } elseif ($request->status === 'inactive') {
+                    $query->where('is_active', false);
+                }
+            }
+
+            if ($request->filled('verified') && $request->verified !== 'all') {
+                if ($request->verified === 'verified') {
+                    $query->whereNotNull('email_verified_at');
+                } elseif ($request->verified === 'unverified') {
+                    $query->whereNull('email_verified_at');
+                }
+            }
+
+            $query->whereHas('roles', function ($query) {
                 $query->where('name', 'ADMIN');
             })
-            ->whereDoesntHave('roles', function ($query) {
-                $query->where('name', 'SUPER_ADMIN');
-            })
-            ->get();
+                ->whereDoesntHave('roles', function ($query) {
+                    $query->where('name', 'SUPER_ADMIN');
+                });
+        });
     }
 
     /**
@@ -57,5 +117,33 @@ class UserRepositoryImplement extends Eloquent implements UserRepository
         return \Spatie\Permission\Models\Role::where('guard_name', 'web')
             ->whereNotIn('name', $excludedRoles)
             ->get();
+    }
+
+    /**
+     * Create a new admin user with role assignment.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createAdmin(array $data): User
+    {
+        $user = $this->create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'is_active' => $data['is_active'] ?? true,
+        ]);
+
+        if (! $user instanceof User) {
+            throw new \Exception('Failed to create user');
+        }
+
+        $refreshed = $user->fresh();
+        if ($refreshed) {
+            $user = $refreshed;
+        }
+
+        $user->assignRole($data['role']);
+
+        return $user;
     }
 }
