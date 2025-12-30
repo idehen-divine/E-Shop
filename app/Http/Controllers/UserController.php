@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Admin\StoreAdminRequest;
-use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,12 +21,14 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $response = $this->userService->getRegularUsers($request);
+
         if ($request->expectsJson() || $request->is('api/*')) {
-            return $this->userService->getRegularUsers()->toJson();
+            return $response->toJson();
         }
 
         return Inertia::render('admin/users/index', [
-            'users' => json_decode($this->userService->getRegularUsers()->toJson()->getContent(), true) ?? [],
+            'users' => json_decode($response->toJson()->getContent(), true),
         ]);
     }
 
@@ -37,12 +39,14 @@ class UserController extends Controller
      */
     public function admins(Request $request)
     {
+        $response = $this->userService->getAdminUsers($request);
+
         if ($request->expectsJson() || $request->is('api/*')) {
-            return $this->userService->getAdminUsers()->toJson();
+            return $response->toJson();
         }
 
         return Inertia::render('admin/admins/index', [
-            'admins' => json_decode($this->userService->getAdminUsers()->toJson()->getContent(), true) ?? [],
+            'admins' => json_decode($response->toJson()->getContent(), true),
         ]);
     }
 
