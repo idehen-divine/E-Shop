@@ -22,7 +22,6 @@ export function DeleteUserDialog({
     user,
 }: DeleteUserDialogProps) {
     const handleDelete = () => {
-        console.log('Delete user:', user.id);
         onOpenChange(false);
     };
 
@@ -73,4 +72,3 @@ export function DeleteUserDialog({
         </Dialog>
     );
 }
-

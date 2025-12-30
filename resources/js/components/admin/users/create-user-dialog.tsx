@@ -17,7 +17,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Form } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface Role {
     id: number;
@@ -39,15 +39,12 @@ export function CreateUserDialog({
 }: CreateUserDialogProps) {
     const [selectedRole, setSelectedRole] = useState<string>('');
 
-    useEffect(() => {
-        if (!open) {
-            setSelectedRole('');
-            return;
-        }
-    }, [open]);
-
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog
+            open={open}
+            onOpenChange={onOpenChange}
+            key={open ? 'open' : 'closed'}
+        >
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>
@@ -68,21 +65,15 @@ export function CreateUserDialog({
                     }}
                     resetOnSuccess
                 >
-                    {({
-                        errors,
-                        processing,
-                        wasSuccessful,
-                    }) => (
+                    {({ errors, processing, wasSuccessful }) => (
                         <>
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="name">Full Name *</Label>
-                                        <Input
-                                            id="name"
-                                            name="name"
-                                            required
-                                        />
+                                        <Label htmlFor="name">
+                                            Full Name *
+                                        </Label>
+                                        <Input id="name" name="name" required />
                                         {errors.name && (
                                             <p className="text-sm text-destructive">
                                                 {errors.name}
@@ -108,7 +99,9 @@ export function CreateUserDialog({
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="password">Password *</Label>
+                                        <Label htmlFor="password">
+                                            Password *
+                                        </Label>
                                         <Input
                                             id="password"
                                             name="password"
@@ -154,7 +147,14 @@ export function CreateUserDialog({
                                                         key={role.id}
                                                         value={role.name}
                                                     >
-                                                        {role.name.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase())}
+                                                        {role.name
+                                                            .replace(/_/g, ' ')
+                                                            .toLowerCase()
+                                                            .replace(
+                                                                /\b\w/g,
+                                                                (l) =>
+                                                                    l.toUpperCase(),
+                                                            )}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>

@@ -1,4 +1,6 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -8,11 +10,9 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { type User } from '@/types';
-import { useEffect, useState } from 'react';
 import { Shield } from 'lucide-react';
+import { useState } from 'react';
 
 interface Role {
     id: number;
@@ -32,36 +32,26 @@ export function ManageRolesDialog({
     user,
     roles = [],
 }: ManageRolesDialogProps) {
-    const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-
-    useEffect(() => {
-        if (open && user.roles) {
-            const availableRoleNames = roles.map((r) => r.name);
-            const filteredRoles = user.roles.filter((role) =>
-                availableRoleNames.includes(role)
-            );
-            setSelectedRoles(filteredRoles);
-        } else if (!open) {
-            setSelectedRoles([]);
-        }
-    }, [user, open, roles]);
+    const availableRoleNames = roles.map((r) => r.name);
+    const filteredRoles =
+        user.roles?.filter((role) => availableRoleNames.includes(role)) || [];
+    const [selectedRoles, setSelectedRoles] = useState<string[]>(filteredRoles);
 
     const handleRoleToggle = (role: string) => {
         setSelectedRoles((prev) =>
             prev.includes(role)
                 ? prev.filter((r) => r !== role)
-                : [...prev, role]
+                : [...prev, role],
         );
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Update roles for user:', user.id, selectedRoles);
         onOpenChange(false);
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={onOpenChange} key={user.id}>
             <DialogContent className="max-w-lg">
                 <DialogHeader>
                     <div className="flex items-center gap-3">
@@ -97,7 +87,7 @@ export function ManageRolesDialog({
                                             <Checkbox
                                                 id={`role-${role.id}`}
                                                 checked={selectedRoles.includes(
-                                                    roleName
+                                                    roleName,
                                                 )}
                                                 onCheckedChange={() =>
                                                     handleRoleToggle(roleName)
@@ -127,24 +117,24 @@ export function ManageRolesDialog({
 
                     {selectedRoles.length > 0 && (
                         <div className="rounded-lg bg-muted p-3">
-                            <p className="text-sm font-medium mb-2">
+                            <p className="mb-2 text-sm font-medium">
                                 Selected Roles:
                             </p>
                             <div className="flex flex-wrap gap-2">
                                 {selectedRoles.map((role) => {
                                     const roleInfo = roles.find(
-                                        (r) => r.name === role
+                                        (r) => r.name === role,
                                     );
                                     const formattedLabel = role
                                         .replace(/_/g, ' ')
                                         .toLowerCase()
-                                        .replace(/\b\w/g, (l) => l.toUpperCase());
+                                        .replace(/\b\w/g, (l) =>
+                                            l.toUpperCase(),
+                                        );
 
                                     return (
                                         <Badge key={role} variant="default">
-                                            {roleInfo
-                                                ? formattedLabel
-                                                : role}
+                                            {roleInfo ? formattedLabel : role}
                                         </Badge>
                                     );
                                 })}
@@ -167,4 +157,3 @@ export function ManageRolesDialog({
         </Dialog>
     );
 }
-

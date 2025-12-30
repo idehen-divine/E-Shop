@@ -1,15 +1,37 @@
-import { Card, CardContent } from '@/components/ui/card';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { type User } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Users } from 'lucide-react';
-import { UserTable } from '@/components/admin/users/user-table';
-import { EditUserDialog } from '@/components/admin/users/edit-user-dialog';
 import { DeleteUserDialog } from '@/components/admin/users/delete-user-dialog';
+import { EditUserDialog } from '@/components/admin/users/edit-user-dialog';
 import { ToggleActiveDialog } from '@/components/admin/users/toggle-active-dialog';
-import { PageHeader } from '@/components/admin/page-header';
+import {
+    UserColumnVisibilityDialog,
+    defaultVisibleColumns as defaultUserColumns,
+    type UserColumnKey,
+} from '@/components/admin/users/user-column-visibility-dialog';
+import { UserFilters } from '@/components/admin/users/user-filters';
+import { UserTable } from '@/components/admin/users/user-table';
+import { Pagination as PaginationComponent } from '@/components/products/pagination';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useDialogState } from '@/hooks/use-dialog-state';
+import { useUserFilters } from '@/hooks/use-user-filters';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem, type User } from '@/types';
+import { type Pagination } from '@/types/products';
+import { Head } from '@inertiajs/react';
+import { Settings2, Users } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,28 +40,83 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface ServiceResponse<T> {
-    code: number;
-    message: string;
-    data?: T;
-    error?: string;
-}
-
 interface AdminUsersIndexProps {
-    users?: ServiceResponse<{ users: User[] }> | User[];
+    users?: {
+        data: {
+            users: User[];
+            pagination: Pagination | null;
+        };
+    };
 }
 
 export default function AdminUsersIndex({
-    users,
+    users: usersProp,
 }: AdminUsersIndexProps) {
-    const usersData = (users as ServiceResponse<{ users: User[] }>)?.data;
-    const usersList = usersData?.users ?? (Array.isArray(users) ? users : []);
+    const usersList = useMemo(() => {
+        if (usersProp?.data?.users && Array.isArray(usersProp.data.users)) {
+            return usersProp.data.users;
+        }
+        return [];
+    }, [usersProp]);
+
+    const pagination = usersProp?.data?.pagination ?? null;
+    const [columnVisibilityDialogOpen, setColumnVisibilityDialogOpen] =
+        useState(false);
+
+    const getDefaultVisibleColumns = (): UserColumnKey[] => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('user-table-columns');
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch {
+                    return defaultUserColumns;
+                }
+            }
+        }
+        return defaultUserColumns;
+    };
+
+    const [visibleColumns, setVisibleColumns] = useState<UserColumnKey[]>(
+        getDefaultVisibleColumns,
+    );
+
+    const handleColumnsChange = (columns: UserColumnKey[]) => {
+        setVisibleColumns(columns);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('user-table-columns', JSON.stringify(columns));
+        }
+    };
+
+    const searchParams = new URLSearchParams(
+        typeof window !== 'undefined' ? window.location.search : '',
+    );
+
     const {
-        openDialog,
-        closeDialog,
-        isDialogOpen,
-        getSelectedItem,
-    } = useDialogState<User>(['edit', 'delete', 'toggleActive']);
+        searchQuery,
+        setSearchQuery,
+        sortBy,
+        sortOrder,
+        perPage,
+        setPerPage,
+        selectedStatus,
+        setSelectedStatus,
+        selectedVerified,
+        setSelectedVerified,
+        handleSort,
+        navigateToPage,
+    } = useUserFilters({
+        initialSearch: searchParams.get('search') || '',
+        initialSortBy: searchParams.get('sort_by') || '',
+        initialSortOrder:
+            (searchParams.get('sort_order') as 'asc' | 'desc') || 'asc',
+        initialPerPage: parseInt(searchParams.get('per_page') || '10', 10),
+        initialStatus: searchParams.get('status') || 'all',
+        initialVerified: searchParams.get('verified') || 'all',
+        basePath: '/admin/users',
+    });
+    const { openDialog, closeDialog, isDialogOpen, getSelectedItem } =
+        useDialogState<User>(['edit', 'delete', 'toggleActive']);
 
     const handleEdit = (user: User): void => {
         openDialog('edit', user);
@@ -53,7 +130,10 @@ export default function AdminUsersIndex({
         openDialog('toggleActive', user);
     };
 
-    const selectedUser = getSelectedItem('edit') || getSelectedItem('delete') || getSelectedItem('toggleActive');
+    const selectedUser =
+        getSelectedItem('edit') ||
+        getSelectedItem('delete') ||
+        getSelectedItem('toggleActive');
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -61,21 +141,103 @@ export default function AdminUsersIndex({
 
             <div className="flex flex-col gap-4 p-4">
                 <Card>
-                    <PageHeader
-                        icon={Users}
-                        title="Users"
-                        description="Manage system users and their roles"
-                    />
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                                    <Users className="h-5 w-5 text-primary" />
+                                </div>
+                                <div>
+                                    <CardTitle>Users</CardTitle>
+                                    <CardDescription>
+                                        Manage system users and their roles
+                                    </CardDescription>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    onClick={() =>
+                                        setColumnVisibilityDialogOpen(true)
+                                    }
+                                    className="gap-2"
+                                >
+                                    <Settings2 className="h-4 w-4" />
+                                    Columns
+                                </Button>
+                            </div>
+                        </div>
+                    </CardHeader>
                     <CardContent>
+                        <UserFilters
+                            searchQuery={searchQuery}
+                            selectedStatus={selectedStatus}
+                            selectedVerified={selectedVerified}
+                            onSearchChange={setSearchQuery}
+                            onStatusChange={setSelectedStatus}
+                            onVerifiedChange={setSelectedVerified}
+                        />
+                        <div className="mb-4 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Show per page:
+                                </label>
+                                <Select
+                                    value={String(perPage)}
+                                    onValueChange={(value) =>
+                                        setPerPage(parseInt(value, 10))
+                                    }
+                                >
+                                    <SelectTrigger className="w-20">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="10">10</SelectItem>
+                                        <SelectItem value="25">25</SelectItem>
+                                        <SelectItem value="50">50</SelectItem>
+                                        <SelectItem value="100">100</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
                         <UserTable
                             users={usersList}
                             onEdit={handleEdit}
                             onDelete={handleDelete}
                             onToggleActive={handleToggleActive}
+                            sortBy={sortBy}
+                            sortOrder={sortOrder}
+                            onSort={handleSort}
+                            visibleColumns={visibleColumns}
                         />
+                        {pagination && pagination.last_page > 1 && (
+                            <PaginationComponent
+                                pagination={pagination}
+                                onPageChange={navigateToPage}
+                                onPrevious={() => {
+                                    if (pagination.previous_page) {
+                                        navigateToPage(
+                                            pagination.previous_page,
+                                        );
+                                    }
+                                }}
+                                onNext={() => {
+                                    if (pagination.next_page) {
+                                        navigateToPage(pagination.next_page);
+                                    }
+                                }}
+                            />
+                        )}
                     </CardContent>
                 </Card>
             </div>
+
+            <UserColumnVisibilityDialog
+                open={columnVisibilityDialogOpen}
+                onOpenChange={setColumnVisibilityDialogOpen}
+                visibleColumns={visibleColumns}
+                onColumnsChange={handleColumnsChange}
+            />
 
             {selectedUser && (
                 <>
@@ -113,4 +275,3 @@ export default function AdminUsersIndex({
         </AppLayout>
     );
 }
-

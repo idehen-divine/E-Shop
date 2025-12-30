@@ -15,19 +15,27 @@ interface ToggleActiveDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     user: User;
+    isAdmin?: boolean;
 }
 
 export function ToggleActiveDialog({
     open,
     onOpenChange,
     user,
+    isAdmin = false,
 }: ToggleActiveDialogProps) {
     const isActive = user.is_active ?? true;
     const action = isActive ? 'suspend' : 'activate';
-    const actionTitle = isActive ? 'Suspend User' : 'Activate User';
+    const actionTitle = isAdmin
+        ? (isActive ? 'Suspend Admin' : 'Activate Admin')
+        : (isActive ? 'Suspend User' : 'Activate User');
 
     const handleToggle = () => {
-        router.patch(`/admin/users/${user.id}/toggle-active`, {}, {
+        const route = isAdmin
+            ? `/admin/admins/${user.id}/toggle-active`
+            : `/admin/users/${user.id}/toggle-active`;
+
+        router.patch(route, {}, {
             preserveScroll: true,
             onSuccess: () => {
                 onOpenChange(false);
@@ -87,7 +95,9 @@ export function ToggleActiveDialog({
                         variant={isActive ? 'destructive' : 'default'}
                         onClick={handleToggle}
                     >
-                        {isActive ? 'Suspend User' : 'Activate User'}
+                        {isAdmin
+                            ? (isActive ? 'Suspend Admin' : 'Activate Admin')
+                            : (isActive ? 'Suspend User' : 'Activate User')}
                     </Button>
                 </DialogFooter>
             </DialogContent>
