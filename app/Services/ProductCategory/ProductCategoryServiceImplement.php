@@ -111,7 +111,8 @@ class ProductCategoryServiceImplement extends ServiceApi implements ProductCateg
 
             $data = $request->validated();
 
-            $category = $this->mainRepository->update($id, $data);
+            $updated = $this->mainRepository->update($id, $data);
+            $category = $this->mainRepository->find($id);
             $category->load(['parent', 'children']);
 
             \DB::commit();

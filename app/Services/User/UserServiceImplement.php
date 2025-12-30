@@ -124,9 +124,10 @@ class UserServiceImplement extends ServiceApi implements UserService
                     ->setMessage('Cannot toggle active status for admin users');
             }
 
-            $user = $this->mainRepository->update($id, [
+            $updated = $this->mainRepository->update($id, [
                 'is_active' => ! $user->is_active,
             ]);
+            $user = $this->mainRepository->find($id);
 
             DB::commit();
 
@@ -175,9 +176,10 @@ class UserServiceImplement extends ServiceApi implements UserService
                     ->setMessage('Can only toggle active status for admin users');
             }
 
-            $user = $this->mainRepository->update($id, [
+            $updated = $this->mainRepository->update($id, [
                 'is_active' => ! $user->is_active,
             ]);
+            $user = $this->mainRepository->find($id);
 
             DB::commit();
 
@@ -218,7 +220,8 @@ class UserServiceImplement extends ServiceApi implements UserService
                     ->setMessage('Cannot update admin users from this page');
             }
 
-            $user = $this->mainRepository->update($id, $data);
+            $updated = $this->mainRepository->update($id, $data);
+            $user = $this->mainRepository->find($id);
 
             DB::commit();
 
@@ -260,7 +263,8 @@ class UserServiceImplement extends ServiceApi implements UserService
                     ->setMessage('Can only update admin users');
             }
 
-            $user = $this->mainRepository->update($id, $data);
+            $updated = $this->mainRepository->update($id, $data);
+            $user = $this->mainRepository->find($id);
 
             DB::commit();
 
