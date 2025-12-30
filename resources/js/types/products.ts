@@ -2,11 +2,7 @@ export interface Category {
     id: string;
     name: string;
     slug: string;
-    description?: string | null;
-    image?: string | null;
     parent_id?: string | null;
-    order?: number;
-    is_active?: boolean;
     parent?: Category | null;
     children?: Category[];
     created_at?: string;

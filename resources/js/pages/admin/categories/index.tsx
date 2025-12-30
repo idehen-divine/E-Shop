@@ -8,7 +8,6 @@ import { CategoryTable } from '@/components/admin/categories/category-table';
 import { CreateCategoryDialog } from '@/components/admin/categories/create-category-dialog';
 import { DeleteCategoryDialog } from '@/components/admin/categories/delete-category-dialog';
 import { EditCategoryDialog } from '@/components/admin/categories/edit-category-dialog';
-import { ToggleActiveCategoryDialog } from '@/components/admin/categories/toggle-active-category-dialog';
 import { Pagination as PaginationComponent } from '@/components/products/pagination';
 import { Button } from '@/components/ui/button';
 import {
@@ -190,14 +189,11 @@ export default function AdminCategoriesIndex({
         setPerPage,
         selectedParent,
         setSelectedParent,
-        selectedStatus,
-        setSelectedStatus,
         handleSort,
         navigateToPage,
     } = useAdminCategoryFilters({
         initialSearch: searchParams.get('search') || '',
         initialParent: searchParams.get('parent') || 'all',
-        initialStatus: searchParams.get('status') || 'all',
         initialSortBy: searchParams.get('sort_by') || '',
         initialSortOrder:
             (searchParams.get('sort_order') as 'asc' | 'desc') || 'asc',
@@ -206,7 +202,7 @@ export default function AdminCategoriesIndex({
     });
 
     const { openDialog, closeDialog, isDialogOpen, getSelectedItem } =
-        useDialogState<Category>(['edit', 'delete', 'toggleActive', 'create']);
+        useDialogState<Category>(['edit', 'delete', 'create']);
 
     const handleEdit = (category: Category): void => {
         openDialog('edit', category);
@@ -216,14 +212,8 @@ export default function AdminCategoriesIndex({
         openDialog('delete', category);
     };
 
-    const handleToggleActive = (category: Category): void => {
-        openDialog('toggleActive', category);
-    };
-
     const selectedCategory =
-        getSelectedItem('edit') ||
-        getSelectedItem('delete') ||
-        getSelectedItem('toggleActive');
+        getSelectedItem('edit') || getSelectedItem('delete');
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -269,11 +259,9 @@ export default function AdminCategoriesIndex({
                         <CategoryFilters
                             searchQuery={searchQuery}
                             selectedParent={selectedParent}
-                            selectedStatus={selectedStatus}
                             categories={parentCategories}
                             onSearchChange={setSearchQuery}
                             onParentChange={setSelectedParent}
-                            onStatusChange={setSelectedStatus}
                         />
                         <div className="mb-4 flex items-center justify-between">
                             <div className="flex items-center gap-2">
@@ -302,7 +290,6 @@ export default function AdminCategoriesIndex({
                             categories={categoriesList}
                             onEdit={handleEdit}
                             onDelete={handleDelete}
-                            onToggleActive={handleToggleActive}
                             sortBy={sortBy}
                             sortOrder={sortOrder}
                             onSort={handleSort}
@@ -365,16 +352,6 @@ export default function AdminCategoriesIndex({
                         onOpenChange={(open) => {
                             if (!open) {
                                 closeDialog('delete');
-                            }
-                        }}
-                        category={selectedCategory}
-                    />
-
-                    <ToggleActiveCategoryDialog
-                        open={isDialogOpen('toggleActive')}
-                        onOpenChange={(open) => {
-                            if (!open) {
-                                closeDialog('toggleActive');
                             }
                         }}
                         category={selectedCategory}

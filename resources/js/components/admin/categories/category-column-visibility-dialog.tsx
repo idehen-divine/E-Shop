@@ -11,13 +11,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { Settings2 } from 'lucide-react';
 
-export type CategoryColumnKey =
-    | 'name'
-    | 'parent'
-    | 'status'
-    | 'description'
-    | 'created_at'
-    | 'actions';
+export type CategoryColumnKey = 'name' | 'parent' | 'created_at' | 'actions';
 
 interface ColumnOption {
     key: CategoryColumnKey;
@@ -27,8 +21,6 @@ interface ColumnOption {
 const allColumns: ColumnOption[] = [
     { key: 'name', label: 'Name' },
     { key: 'parent', label: 'Parent' },
-    { key: 'status', label: 'Status' },
-    { key: 'description', label: 'Description' },
     { key: 'created_at', label: 'Created' },
     { key: 'actions', label: 'Actions' },
 ];
@@ -36,7 +28,6 @@ const allColumns: ColumnOption[] = [
 export const defaultVisibleColumns: CategoryColumnKey[] = [
     'name',
     'parent',
-    'status',
     'actions',
 ];
 

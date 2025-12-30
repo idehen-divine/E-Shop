@@ -13,20 +13,16 @@ interface CategoryFiltersProps {
     categories: Category[];
     searchQuery: string;
     selectedParent: string;
-    selectedStatus: string;
     onSearchChange: (value: string) => void;
     onParentChange: (value: string) => void;
-    onStatusChange: (value: string) => void;
 }
 
 export function CategoryFilters({
     categories,
     searchQuery,
     selectedParent,
-    selectedStatus,
     onSearchChange,
     onParentChange,
-    onStatusChange,
 }: CategoryFiltersProps) {
     const rootCategories = categories.filter((cat) => !cat.parent_id);
 
@@ -64,22 +60,6 @@ export function CategoryFilters({
                                     {category.name}
                                 </SelectItem>
                             ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div className="w-[180px]">
-                    <Select
-                        value={selectedStatus}
-                        onValueChange={onStatusChange}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="All statuses" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All</SelectItem>
-                            <SelectItem value="active">Active</SelectItem>
-                            <SelectItem value="inactive">Inactive</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

@@ -14,7 +14,6 @@ import {
     Edit,
     FolderTree,
     MoreVertical,
-    Power,
     Trash2,
 } from 'lucide-react';
 import { type CategoryColumnKey } from './category-column-visibility-dialog';
@@ -23,7 +22,6 @@ interface CategoryTableProps {
     categories: Category[];
     onEdit: (category: Category) => void;
     onDelete: (category: Category) => void;
-    onToggleActive?: (category: Category) => void;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
     onSort?: (column: string) => void;
@@ -36,11 +34,10 @@ export function CategoryTable({
     categories,
     onEdit,
     onDelete,
-    onToggleActive,
     sortBy,
     sortOrder = 'asc',
     onSort,
-    visibleColumns = ['name', 'parent', 'status', 'actions'],
+    visibleColumns = ['name', 'parent', 'actions'],
 }: CategoryTableProps) {
     const handleSort = (column: string) => {
         if (!onSort || !sortableColumns.includes(column)) {
@@ -102,11 +99,6 @@ export function CategoryTable({
                                 Status
                             </th>
                         )}
-                        {isColumnVisible('description') && (
-                            <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                                Description
-                            </th>
-                        )}
                         {isColumnVisible('created_at') &&
                             renderSortableHeader('created_at', 'Created Date')}
                         {isColumnVisible('actions') && (
@@ -135,17 +127,9 @@ export function CategoryTable({
                                 {isColumnVisible('name') && (
                                     <td className="px-4 py-3">
                                         <div className="flex items-center gap-3">
-                                            {category.image ? (
-                                                <img
-                                                    src={category.image}
-                                                    alt={category.name}
-                                                    className="h-10 w-10 rounded-md object-cover"
-                                                />
-                                            ) : (
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted">
-                                                    <FolderTree className="h-5 w-5 text-muted-foreground" />
-                                                </div>
-                                            )}
+                                            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted">
+                                                <FolderTree className="h-5 w-5 text-muted-foreground" />
+                                            </div>
                                             <div>
                                                 <div className="font-medium">
                                                     {category.name}
@@ -168,30 +152,6 @@ export function CategoryTable({
                                                 Root
                                             </span>
                                         )}
-                                    </td>
-                                )}
-                                {isColumnVisible('status') && (
-                                    <td className="px-4 py-3">
-                                        {category.is_active !== undefined ? (
-                                            category.is_active ? (
-                                                <Badge variant="default">
-                                                    Active
-                                                </Badge>
-                                            ) : (
-                                                <Badge variant="secondary">
-                                                    Inactive
-                                                </Badge>
-                                            )
-                                        ) : (
-                                            <Badge variant="default">
-                                                Active
-                                            </Badge>
-                                        )}
-                                    </td>
-                                )}
-                                {isColumnVisible('description') && (
-                                    <td className="line-clamp-1 px-4 py-3 text-sm text-muted-foreground">
-                                        {category.description ?? '-'}
                                     </td>
                                 )}
                                 {isColumnVisible('created_at') && (
@@ -229,20 +189,6 @@ export function CategoryTable({
                                                         <Edit className="mr-2 h-4 w-4" />
                                                         Edit
                                                     </DropdownMenuItem>
-                                                    {onToggleActive && (
-                                                        <DropdownMenuItem
-                                                            onClick={() =>
-                                                                onToggleActive(
-                                                                    category,
-                                                                )
-                                                            }
-                                                        >
-                                                            <Power className="mr-2 h-4 w-4" />
-                                                            {category.is_active
-                                                                ? 'Deactivate'
-                                                                : 'Activate'}
-                                                        </DropdownMenuItem>
-                                                    )}
                                                     <DropdownMenuItem
                                                         onClick={() =>
                                                             onDelete(category)
