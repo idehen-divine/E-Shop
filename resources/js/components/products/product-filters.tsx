@@ -14,9 +14,13 @@ interface ProductFiltersProps {
     searchQuery: string;
     selectedCategory: string;
     priceRange: string;
+    selectedStatus?: string;
+    selectedFeatured?: string;
     onSearchChange: (value: string) => void;
     onCategoryChange: (value: string) => void;
     onPriceRangeChange: (value: string) => void;
+    onStatusChange?: (value: string) => void;
+    onFeaturedChange?: (value: string) => void;
 }
 
 export function ProductFilters({
@@ -24,9 +28,13 @@ export function ProductFilters({
     searchQuery,
     selectedCategory,
     priceRange,
+    selectedStatus = 'all',
+    selectedFeatured = 'all',
     onSearchChange,
     onCategoryChange,
     onPriceRangeChange,
+    onStatusChange,
+    onFeaturedChange,
 }: ProductFiltersProps) {
 
     return (
@@ -59,7 +67,7 @@ export function ProductFilters({
                 </Select>
                 <Select value={priceRange} onValueChange={onPriceRangeChange}>
                     <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Sort by" />
+                        <SelectValue placeholder="All Prices" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All Prices</SelectItem>
@@ -69,6 +77,30 @@ export function ProductFilters({
                         <SelectItem value="over-200">Over $200</SelectItem>
                     </SelectContent>
                 </Select>
+                {onStatusChange && (
+                    <Select value={selectedStatus} onValueChange={onStatusChange}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="All Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Status</SelectItem>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                    </Select>
+                )}
+                {onFeaturedChange && (
+                    <Select value={selectedFeatured} onValueChange={onFeaturedChange}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="All Featured" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Featured</SelectItem>
+                            <SelectItem value="featured">Featured</SelectItem>
+                            <SelectItem value="not-featured">Not Featured</SelectItem>
+                        </SelectContent>
+                    </Select>
+                )}
             </div>
         </div>
     );
