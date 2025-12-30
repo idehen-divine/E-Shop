@@ -20,6 +20,13 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useAdminProductFilters } from '@/hooks/use-admin-product-filters';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -113,6 +120,8 @@ export default function AdminProductsIndex({
         setSelectedFeatured,
         sortBy,
         sortOrder,
+        perPage,
+        setPerPage,
         handleSort,
         navigateToPage,
     } = useAdminProductFilters({
@@ -124,6 +133,7 @@ export default function AdminProductsIndex({
         initialSortBy: searchParams.get('sort_by') || '',
         initialSortOrder:
             (searchParams.get('sort_order') as 'asc' | 'desc') || 'asc',
+        initialPerPage: parseInt(searchParams.get('per_page') || '10', 10),
     });
 
     const handleEdit = (product: Product) => {
@@ -221,6 +231,29 @@ export default function AdminProductsIndex({
                             onStatusChange={setSelectedStatus}
                             onFeaturedChange={setSelectedFeatured}
                         />
+                        <div className="mb-4 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Show per page:
+                                </label>
+                                <Select
+                                    value={String(perPage)}
+                                    onValueChange={(value) =>
+                                        setPerPage(parseInt(value, 10))
+                                    }
+                                >
+                                    <SelectTrigger className="w-20">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="10">10</SelectItem>
+                                        <SelectItem value="25">25</SelectItem>
+                                        <SelectItem value="50">50</SelectItem>
+                                        <SelectItem value="100">100</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
                         <ProductTable
                             products={products}
                             onEdit={handleEdit}

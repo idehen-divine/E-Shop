@@ -29,7 +29,7 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
     public function getAllProducts($request)
     {
         if (! $request->has('per_page')) {
-            $request->merge(['per_page' => 24]);
+            $request->merge(['per_page' => 10]);
         }
 
         return helpers()->queryableHelper()->fetchWithFilters($this->model, function ($query) use ($request) {
@@ -74,7 +74,7 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
     public function getAllProductsForAdmin($request)
     {
         if (! $request->has('per_page')) {
-            $request->merge(['per_page' => 24]);
+            $request->merge(['per_page' => 10]);
         }
 
         return helpers()->queryableHelper()->fetchWithFilters($this->model, function ($query) use ($request) {
