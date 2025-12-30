@@ -90,46 +90,33 @@ export function useAdminProductFilters({
             const newSortOrder = newSortBy ? sortOrder : undefined;
             const newPerPage = perPage !== 10 ? String(perPage) : undefined;
 
-            const currentSearch = currentParams.get('search') || undefined;
-            const currentCategory = currentParams.get('category') || undefined;
-            const currentPrice = currentParams.get('price') || undefined;
-            const currentStatus = currentParams.get('status') || undefined;
-            const currentFeatured = currentParams.get('featured') || undefined;
-            const currentSortBy = currentParams.get('sort_by') || undefined;
-            const currentSortOrder = currentParams.get('sort_order') || undefined;
-            const currentPerPage = currentParams.get('per_page') || undefined;
-
-            if (newSearch !== currentSearch) {
+            // Always include all current filter values
+            if (newSearch) {
                 params.search = newSearch;
             }
 
-            if (newCategory !== currentCategory) {
+            if (newCategory) {
                 params.category = newCategory;
             }
 
-            if (newPrice !== currentPrice) {
+            if (newPrice) {
                 params.price = newPrice;
             }
 
-            if (newStatus !== currentStatus) {
+            if (newStatus) {
                 params.status = newStatus;
             }
 
-            if (newFeatured !== currentFeatured) {
+            if (newFeatured) {
                 params.featured = newFeatured;
             }
 
-            if (newSortBy !== currentSortBy || newSortOrder !== currentSortOrder) {
-                if (newSortBy) {
-                    params.sort_by = newSortBy;
-                    params.sort_order = newSortOrder || 'asc';
-                } else {
-                    params.sort_by = undefined;
-                    params.sort_order = undefined;
-                }
+            if (newSortBy) {
+                params.sort_by = newSortBy;
+                params.sort_order = newSortOrder || 'asc';
             }
 
-            if (newPerPage !== currentPerPage) {
+            if (newPerPage) {
                 params.per_page = newPerPage;
             }
 
@@ -137,8 +124,8 @@ export function useAdminProductFilters({
                 prevSearchRef.current = searchQuery;
                 prevCategoryRef.current = selectedCategory;
                 prevPriceRef.current = priceRange;
-            prevStatusRef.current = selectedStatus;
-            prevFeaturedRef.current = selectedFeatured;
+                prevStatusRef.current = selectedStatus;
+                prevFeaturedRef.current = selectedFeatured;
                 prevSortByRef.current = sortBy;
                 prevSortOrderRef.current = sortOrder;
                 prevPerPageRef.current = perPage;
@@ -150,8 +137,8 @@ export function useAdminProductFilters({
             prevSearchRef.current = searchQuery;
             prevCategoryRef.current = selectedCategory;
             prevPriceRef.current = priceRange;
-        prevStatusRef.current = selectedStatus;
-        prevFeaturedRef.current = selectedFeatured;
+            prevStatusRef.current = selectedStatus;
+            prevFeaturedRef.current = selectedFeatured;
             prevSortByRef.current = sortBy;
             prevSortOrderRef.current = sortOrder;
             prevPerPageRef.current = perPage;
