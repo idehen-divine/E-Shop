@@ -50,10 +50,64 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($product) {
-            if (empty($product->slug)) {
-                $product->slug = Str::slug($product->name);
+            $product->slug = static::generateUniqueSlug($product->name);
+
+            if (empty($product->sku)) {
+                $product->sku = static::generateUniqueSku($product->name);
             }
         });
+
+        static::updating(function ($product) {
+            if ($product->isDirty('name')) {
+                $product->slug = static::generateUniqueSlug($product->name, $product->id);
+            }
+        });
+    }
+
+    protected static function generateUniqueSlug(string $name, ?string $ignoreId = null): string
+    {
+        $slug = Str::slug($name);
+        $originalSlug = $slug;
+        $count = 1;
+
+        $query = static::where('slug', $slug);
+
+        if ($ignoreId) {
+            $query->where('id', '!=', $ignoreId);
+        }
+
+        while ($query->exists()) {
+            $slug = $originalSlug.'-'.$count;
+            $count++;
+
+            $query = static::where('slug', $slug);
+            if ($ignoreId) {
+                $query->where('id', '!=', $ignoreId);
+            }
+        }
+
+        return $slug;
+    }
+
+    protected static function generateUniqueSku(string $name): string
+    {
+        $nameParts = explode(' ', $name);
+        $prefix = '';
+
+        if (count($nameParts) >= 2) {
+            $prefix = strtoupper(substr($nameParts[0], 0, 3).substr($nameParts[1], 0, 2));
+        } else {
+            $prefix = strtoupper(substr($name, 0, 5));
+        }
+
+        $prefix = preg_replace('/[^A-Z0-9]/', '', $prefix);
+
+        do {
+            $random = strtoupper(Str::random(6));
+            $sku = $prefix.'-'.$random;
+        } while (static::where('sku', $sku)->exists());
+
+        return $sku;
     }
 
     public function scopeActive($query)
