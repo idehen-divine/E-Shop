@@ -6,9 +6,9 @@ use LaravelEasyRepository\BaseService;
 
 interface UserService extends BaseService
 {
-    public function getRegularUsers();
+    public function getRegularUsers($request = null);
 
-    public function getAdminUsers();
+    public function getAdminUsers($request = null);
 
     public function createAdmin(array $data);
 

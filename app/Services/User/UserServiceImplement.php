@@ -3,8 +3,8 @@
 namespace App\Services\User;
 
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use App\Repositories\User\UserRepository;
+use Illuminate\Support\Facades\DB;
 use LaravelEasyRepository\ServiceApi;
 
 class UserServiceImplement extends ServiceApi implements UserService
@@ -23,15 +23,16 @@ class UserServiceImplement extends ServiceApi implements UserService
     /**
      * Get all regular users (excluding ADMIN and SUPER_ADMIN).
      */
-    public function getRegularUsers(): UserServiceImplement
+    public function getRegularUsers($request = null): UserServiceImplement
     {
         try {
-            $users = $this->mainRepository->getRegularUsers();
+            $users = $this->mainRepository->getRegularUsers($request);
 
             return $this->setCode(200)
                 ->setMessage('Users retrieved successfully')
                 ->setData([
                     'users' => UserResource::collection($users),
+                    'pagination' => helpers()->queryableHelper()->getPagination($users),
                 ]);
         } catch (\Exception $e) {
             return $this->setCode(500)
@@ -43,10 +44,10 @@ class UserServiceImplement extends ServiceApi implements UserService
     /**
      * Get all admin users (excluding SUPER_ADMIN) with available roles.
      */
-    public function getAdminUsers(): UserServiceImplement
+    public function getAdminUsers($request = null): UserServiceImplement
     {
         try {
-            $users = $this->mainRepository->getAdminUsers();
+            $users = $this->mainRepository->getAdminUsers($request);
             $roles = $this->mainRepository->getAvailableRoles(['SUPER_ADMIN', 'USER']);
 
             $rolesArray = $roles->map(fn ($role) => [
@@ -66,6 +67,7 @@ class UserServiceImplement extends ServiceApi implements UserService
                     'users' => UserResource::collection($users),
                     'roles' => $rolesArray,
                     'manageRoles' => $manageRolesArray,
+                    'pagination' => helpers()->queryableHelper()->getPagination($users),
                 ]);
         } catch (\Exception $e) {
             return $this->setCode(500)
@@ -79,15 +81,11 @@ class UserServiceImplement extends ServiceApi implements UserService
      */
     public function createAdmin(array $data): UserServiceImplement
     {
+        DB::beginTransaction();
         try {
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'is_active' => $data['is_active'] ?? true,
-            ]);
+            $user = $this->mainRepository->createAdmin($data);
 
-            $user->assignRole($data['role']);
+            DB::commit();
 
             return $this->setCode(201)
                 ->setMessage('Admin user created successfully')
@@ -95,6 +93,8 @@ class UserServiceImplement extends ServiceApi implements UserService
                     'user' => new UserResource($user->load('roles')),
                 ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return $this->setCode(500)
                 ->setMessage('An error occurred while creating admin user')
                 ->setError($e->getMessage());
@@ -106,17 +106,29 @@ class UserServiceImplement extends ServiceApi implements UserService
      */
     public function toggleUserActive(string $id): UserServiceImplement
     {
+        DB::beginTransaction();
         try {
-            $user = User::findOrFail($id);
+            $user = $this->mainRepository->find($id);
+
+            if (! $user) {
+                DB::rollBack();
+
+                return $this->setCode(404)
+                    ->setMessage('User not found');
+            }
 
             if ($this->hasAdminRole($user)) {
+                DB::rollBack();
+
                 return $this->setCode(403)
                     ->setMessage('Cannot toggle active status for admin users');
             }
 
-            $user->update([
+            $user = $this->mainRepository->update($id, [
                 'is_active' => ! $user->is_active,
             ]);
+
+            DB::commit();
 
             return $this->setCode(200)
                 ->setMessage('User status updated successfully')
@@ -124,6 +136,8 @@ class UserServiceImplement extends ServiceApi implements UserService
                     'user' => new UserResource($user->load('roles')),
                 ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return $this->setCode(500)
                 ->setMessage('An error occurred while updating user status')
                 ->setError($e->getMessage());
@@ -135,23 +149,37 @@ class UserServiceImplement extends ServiceApi implements UserService
      */
     public function toggleAdminActive(string $id): UserServiceImplement
     {
+        DB::beginTransaction();
         try {
-            $user = User::findOrFail($id);
+            $user = $this->mainRepository->find($id);
+
+            if (! $user) {
+                DB::rollBack();
+
+                return $this->setCode(404)
+                    ->setMessage('Admin not found');
+            }
 
             $userRoles = $user->getRoleNames()->toArray();
             if (in_array('SUPER_ADMIN', $userRoles)) {
+                DB::rollBack();
+
                 return $this->setCode(403)
                     ->setMessage('Cannot toggle active status for super admin users');
             }
 
             if (! in_array('ADMIN', $userRoles)) {
+                DB::rollBack();
+
                 return $this->setCode(403)
                     ->setMessage('Can only toggle active status for admin users');
             }
 
-            $user->update([
+            $user = $this->mainRepository->update($id, [
                 'is_active' => ! $user->is_active,
             ]);
+
+            DB::commit();
 
             return $this->setCode(200)
                 ->setMessage('Admin status updated successfully')
@@ -159,6 +187,8 @@ class UserServiceImplement extends ServiceApi implements UserService
                     'user' => new UserResource($user->load('roles')),
                 ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return $this->setCode(500)
                 ->setMessage('An error occurred while updating admin status')
                 ->setError($e->getMessage());
@@ -170,15 +200,27 @@ class UserServiceImplement extends ServiceApi implements UserService
      */
     public function updateUser(string $id, array $data): UserServiceImplement
     {
+        DB::beginTransaction();
         try {
-            $user = User::findOrFail($id);
+            $user = $this->mainRepository->find($id);
+
+            if (! $user) {
+                DB::rollBack();
+
+                return $this->setCode(404)
+                    ->setMessage('User not found');
+            }
 
             if ($this->hasAdminRole($user)) {
+                DB::rollBack();
+
                 return $this->setCode(403)
                     ->setMessage('Cannot update admin users from this page');
             }
 
-            $this->updateUserAttributes($user, $data);
+            $user = $this->mainRepository->update($id, $data);
+
+            DB::commit();
 
             return $this->setCode(200)
                 ->setMessage('User updated successfully')
@@ -186,6 +228,8 @@ class UserServiceImplement extends ServiceApi implements UserService
                     'user' => new UserResource($user->load('roles')),
                 ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return $this->setCode(500)
                 ->setMessage('An error occurred while updating user')
                 ->setError($e->getMessage());
@@ -197,16 +241,28 @@ class UserServiceImplement extends ServiceApi implements UserService
      */
     public function updateAdmin(string $id, array $data): UserServiceImplement
     {
+        DB::beginTransaction();
         try {
-            $user = User::findOrFail($id);
+            $user = $this->mainRepository->find($id);
+
+            if (! $user) {
+                DB::rollBack();
+
+                return $this->setCode(404)
+                    ->setMessage('Admin not found');
+            }
 
             $userRoles = $user->getRoleNames()->toArray();
             if (! in_array('ADMIN', $userRoles) || in_array('SUPER_ADMIN', $userRoles)) {
+                DB::rollBack();
+
                 return $this->setCode(403)
                     ->setMessage('Can only update admin users');
             }
 
-            $this->updateUserAttributes($user, $data);
+            $user = $this->mainRepository->update($id, $data);
+
+            DB::commit();
 
             return $this->setCode(200)
                 ->setMessage('Admin updated successfully')
@@ -214,6 +270,8 @@ class UserServiceImplement extends ServiceApi implements UserService
                     'user' => new UserResource($user->load('roles')),
                 ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return $this->setCode(500)
                 ->setMessage('An error occurred while updating admin')
                 ->setError($e->getMessage());
@@ -223,24 +281,10 @@ class UserServiceImplement extends ServiceApi implements UserService
     /**
      * Check if a user has ADMIN or SUPER_ADMIN role.
      */
-    private function hasAdminRole(User $user): bool
+    private function hasAdminRole($user): bool
     {
         $userRoles = $user->getRoleNames()->toArray();
 
         return in_array('ADMIN', $userRoles) || in_array('SUPER_ADMIN', $userRoles);
-    }
-
-    /**
-     * Update user attributes and reset email verification if email changed.
-     */
-    private function updateUserAttributes(User $user, array $attributes): void
-    {
-        $user->fill($attributes);
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
     }
 }
