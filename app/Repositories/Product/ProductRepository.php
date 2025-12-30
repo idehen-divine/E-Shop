@@ -7,4 +7,6 @@ use LaravelEasyRepository\Repository;
 interface ProductRepository extends Repository
 {
     public function getAllProducts($request);
+
+    public function getAllProductsForAdmin($request);
 }
