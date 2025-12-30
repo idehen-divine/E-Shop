@@ -21,18 +21,6 @@ class ProductCategoryRepositoryImplement extends Eloquent implements ProductCate
     }
 
     /**
-     * Get all active categories ordered by order field
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllActiveCategories()
-    {
-        return $this->model->active()
-            ->ordered()
-            ->get();
-    }
-
-    /**
      * Get all categories for admin (including inactive) with filtering
      *
      * @param  \Illuminate\Http\Request  $request  Request with optional filters
@@ -48,10 +36,7 @@ class ProductCategoryRepositoryImplement extends Eloquent implements ProductCate
             $query->with(['parent', 'children']);
 
             if ($request->filled('search')) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('name', 'like', '%'.$request->search.'%')
-                        ->orWhere('description', 'like', '%'.$request->search.'%');
-                });
+                $query->where('name', 'like', '%'.$request->search.'%');
             }
 
             if ($request->filled('parent')) {
@@ -62,20 +47,12 @@ class ProductCategoryRepositoryImplement extends Eloquent implements ProductCate
                 }
             }
 
-            if ($request->filled('status')) {
-                if ($request->status === 'active') {
-                    $query->where('is_active', true);
-                } elseif ($request->status === 'inactive') {
-                    $query->where('is_active', false);
-                }
-            }
-
             if ($request->filled('sort_by')) {
                 $sortBy = $request->sort_by;
                 $sortOrder = $request->get('sort_order', 'asc');
                 $query->orderBy($sortBy, $sortOrder);
             } else {
-                $query->orderBy('order')->orderBy('name');
+                $query->orderBy('name');
             }
         });
     }

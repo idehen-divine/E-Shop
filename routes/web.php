@@ -22,7 +22,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-
     Route::get('admin/products', [ProductController::class, 'admin'])->name('admin.products.index');
     Route::post('admin/products', [ProductController::class, 'store'])->name('admin.products.store');
     Route::patch('admin/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
@@ -31,13 +30,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('admin/products/{id}/toggle-featured', [ProductController::class, 'toggleFeatured'])->name('admin.products.toggle-featured');
     Route::patch('admin/products/{id}/update-stock', [ProductController::class, 'updateStock'])->name('admin.products.update-stock');
 
-
     Route::get('admin/categories', [ProductCategoryController::class, 'index'])->name('admin.categories.index');
     Route::post('admin/categories', [ProductCategoryController::class, 'store'])->name('admin.categories.store');
     Route::patch('admin/categories/{id}', [ProductCategoryController::class, 'update'])->name('admin.categories.update');
     Route::delete('admin/categories/{id}', [ProductCategoryController::class, 'destroy'])->name('admin.categories.destroy');
-    Route::patch('admin/categories/{id}/toggle-active', [ProductCategoryController::class, 'toggleActive'])->name('admin.categories.toggle-active');
-
 
     Route::get('admin/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::patch('admin/users/{id}', [UserController::class, 'update'])->name('admin.users.update');

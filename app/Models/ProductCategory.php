@@ -17,19 +17,13 @@ class ProductCategory extends Model
     protected $fillable = [
         'name',
         'slug',
-        'description',
-        'image',
         'parent_id',
-        'order',
-        'is_active',
     ];
 
     protected function casts(): array
     {
         return [
             'parent_id' => 'integer',
-            'order' => 'integer',
-            'is_active' => 'boolean',
         ];
     }
 
@@ -60,19 +54,9 @@ class ProductCategory extends Model
             ->using(CategoryProduct::class);
     }
 
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
     public function scopeParent($query)
     {
         return $query->whereNull('parent_id');
-    }
-
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('order');
     }
 
     public function isParent(): bool

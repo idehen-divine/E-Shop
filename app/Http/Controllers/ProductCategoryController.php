@@ -70,19 +70,4 @@ class ProductCategoryController extends Controller
     {
         return $this->productCategoryService->deleteCategory($id)->toJson();
     }
-
-    /**
-     * Toggle the active status of a category.
-     */
-    public function toggleActive(Request $request, string $id): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
-    {
-        $result = $this->productCategoryService->toggleCategoryActive($id);
-
-        if ($request->expectsJson() || $request->is('api/*')) {
-            return $result->toJson();
-        }
-
-        return redirect()->route('admin.categories.index')
-            ->with('success', 'Category status updated successfully.');
-    }
 }

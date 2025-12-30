@@ -15,17 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
             $table->foreignUuid('parent_id')->nullable()->constrained('product_categories')->onDelete('cascade');
-            $table->integer('order')->default(0);
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('parent_id');
-            $table->index('is_active');
-            $table->index('order');
         });
     }
 

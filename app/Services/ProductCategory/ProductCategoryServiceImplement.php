@@ -26,7 +26,7 @@ class ProductCategoryServiceImplement extends ServiceApi implements ProductCateg
     public function getAllCategories(): ProductCategoryServiceImplement
     {
         try {
-            $categories = $this->mainRepository->getAllActiveCategories();
+            $categories = $this->mainRepository->all();
 
             return $this->setCode(200)
                 ->setMessage('Categories retrieved successfully')
@@ -74,10 +74,6 @@ class ProductCategoryServiceImplement extends ServiceApi implements ProductCateg
         try {
             $data = $request->validated();
 
-            if ($request->hasFile('image')) {
-                $data['image'] = '/storage/'.$request->file('image')->store('categories', 'public');
-            }
-
             $category = $this->mainRepository->create($data);
 
             \DB::commit();
@@ -115,14 +111,6 @@ class ProductCategoryServiceImplement extends ServiceApi implements ProductCateg
 
             $data = $request->validated();
 
-            if ($request->hasFile('image')) {
-                if ($category->image) {
-                    $oldImage = str_replace('/storage/', '', $category->image);
-                    \Storage::disk('public')->delete($oldImage);
-                }
-                $data['image'] = '/storage/'.$request->file('image')->store('categories', 'public');
-            }
-
             $category = $this->mainRepository->update($id, $data);
             $category->load(['parent', 'children']);
 
@@ -158,11 +146,6 @@ class ProductCategoryServiceImplement extends ServiceApi implements ProductCateg
                     ->setMessage('Category not found');
             }
 
-            if ($category->image) {
-                $imagePath = str_replace('/storage/', '', $category->image);
-                \Storage::disk('public')->delete($imagePath);
-            }
-
             $this->mainRepository->delete($id);
 
             \DB::commit();
@@ -174,42 +157,6 @@ class ProductCategoryServiceImplement extends ServiceApi implements ProductCateg
 
             return $this->setCode(500)
                 ->setMessage('An error occurred while deleting category')
-                ->setError($e->getMessage());
-        }
-    }
-
-    /**
-     * Toggle category active status
-     *
-     * @param  string  $id
-     */
-    public function toggleCategoryActive($id): ProductCategoryServiceImplement
-    {
-        \DB::beginTransaction();
-        try {
-            $category = $this->mainRepository->find($id);
-
-            if (! $category) {
-                return $this->setCode(404)
-                    ->setMessage('Category not found');
-            }
-
-            $category->is_active = ! $category->is_active;
-            $category->save();
-            $category->load(['parent', 'children']);
-
-            \DB::commit();
-
-            return $this->setCode(200)
-                ->setMessage('Category status updated successfully')
-                ->setData([
-                    'category' => new CategoryResource($category),
-                ]);
-        } catch (\Exception $e) {
-            \DB::rollBack();
-
-            return $this->setCode(500)
-                ->setMessage('An error occurred while updating category status')
                 ->setError($e->getMessage());
         }
     }

@@ -17,7 +17,6 @@ class UpdateCategoryRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
             'parent_id' => [
                 'nullable',
                 function ($attribute, $value, $fail) use ($categoryId) {
@@ -32,9 +31,6 @@ class UpdateCategoryRequest extends FormRequest
                     }
                 },
             ],
-            'order' => ['nullable', 'integer', 'min:0'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
-            'is_active' => ['sometimes', 'boolean'],
         ];
     }
 }
