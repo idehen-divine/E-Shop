@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Low Stock Threshold
+    |--------------------------------------------------------------------------
+    |
+    | This value determines when a product is considered to have low stock.
+    | When a product's stock falls to or below this threshold, an email
+    | notification will be sent to all admin users.
+    |
+    */
+
+    'low_stock_threshold' => env('LOW_STOCK_THRESHOLD', 10),
+
 ];

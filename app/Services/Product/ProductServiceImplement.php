@@ -319,7 +319,13 @@ class ProductServiceImplement extends ServiceApi implements ProductService
             }
 
             $data = $request->validated();
+            $oldStock = $product->stock;
             $product->update(['stock' => $data['stock']]);
+
+            $lowStockThreshold = config('app.low_stock_threshold', 10);
+            if ($product->stock <= $lowStockThreshold && $oldStock > $lowStockThreshold) {
+                \App\Jobs\SendLowStockNotification::dispatch($product, $lowStockThreshold);
+            }
 
             return $this->setCode(200)
                 ->setMessage('Product stock updated successfully')
