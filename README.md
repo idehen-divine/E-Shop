@@ -46,7 +46,12 @@ A modern e-commerce application built with Laravel 12, Inertia.js, React 19, and
    php artisan migrate
    ```
 
-6. **Set up the application**
+6. **Build frontend assets**
+   ```bash
+   npm run build
+   ```
+
+7. **Set up the application**
    ```bash
    php artisan eshop:setup
    ```
