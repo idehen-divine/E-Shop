@@ -36,8 +36,9 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
         if (!item.items) {
             return false;
         }
-        return item.items.some((subItem) =>
-            subItem.href && page.url.startsWith(resolveUrl(subItem.href))
+        return item.items.some(
+            (subItem) =>
+                subItem.href && page.url.startsWith(resolveUrl(subItem.href)),
         );
     };
 
@@ -51,7 +52,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
         setOpenItems((prev) =>
             prev.includes(title)
                 ? prev.filter((item) => item !== title)
-                : [...prev, title]
+                : [...prev, title],
         );
     };
 
@@ -84,7 +85,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                             {item.icon && (
                                                 <item.icon className="h-4 w-4 flex-shrink-0 transition-transform group-hover:scale-110" />
                                             )}
-                                            <span className="text-sm flex-1 text-left">
+                                            <span className="flex-1 text-left text-sm">
                                                 {item.title}
                                             </span>
                                             <ChevronRight
@@ -97,22 +98,32 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                     <CollapsibleContent>
                                         <SidebarMenuSub>
                                             {item.items?.map((subItem) => (
-                                                <SidebarMenuSubItem key={subItem.title}>
+                                                <SidebarMenuSubItem
+                                                    key={subItem.title}
+                                                >
                                                     <SidebarMenuSubButton
                                                         asChild
                                                         isActive={page.url.startsWith(
-                                                            resolveUrl(subItem.href || ''),
+                                                            resolveUrl(
+                                                                subItem.href ||
+                                                                    '',
+                                                            ),
                                                         )}
                                                     >
                                                         <Link
-                                                            href={subItem.href || '#'}
+                                                            href={
+                                                                subItem.href ||
+                                                                '#'
+                                                            }
                                                             prefetch
                                                             className="flex items-center gap-2"
                                                         >
                                                             {subItem.icon && (
                                                                 <subItem.icon className="h-4 w-4 flex-shrink-0" />
                                                             )}
-                                                            <span>{subItem.title}</span>
+                                                            <span>
+                                                                {subItem.title}
+                                                            </span>
                                                         </Link>
                                                     </SidebarMenuSubButton>
                                                 </SidebarMenuSubItem>
@@ -132,11 +143,17 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 tooltip={{ children: item.title }}
                                 className="group h-10 gap-3 rounded-lg px-3 transition-all hover:bg-sidebar-accent/50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:shadow-sm"
                             >
-                                <Link href={item.href || '#'} prefetch className="flex items-center gap-3">
+                                <Link
+                                    href={item.href || '#'}
+                                    prefetch
+                                    className="flex items-center gap-3"
+                                >
                                     {item.icon && (
                                         <item.icon className="h-4 w-4 flex-shrink-0 transition-transform group-hover:scale-110" />
                                     )}
-                                    <span className="text-sm">{item.title}</span>
+                                    <span className="text-sm">
+                                        {item.title}
+                                    </span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

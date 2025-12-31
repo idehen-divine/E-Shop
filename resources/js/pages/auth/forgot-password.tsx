@@ -3,8 +3,8 @@ import { email } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
 import { ArrowLeft, CheckCircle2, Mail, Send } from 'lucide-react';
 
-import InputError from '@/components/input-error';
 import { Icon } from '@/components/icon';
+import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,7 +37,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 <div className="relative">
                                     <Icon
                                         iconNode={Mail}
-                                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                        className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                     />
                                     <Input
                                         id="email"

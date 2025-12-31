@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -7,11 +8,19 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Settings2 } from 'lucide-react';
 
-export type ColumnKey = 'name' | 'sku' | 'price' | 'stock' | 'status' | 'featured' | 'categories' | 'created_at' | 'actions';
+export type ColumnKey =
+    | 'name'
+    | 'sku'
+    | 'price'
+    | 'stock'
+    | 'status'
+    | 'featured'
+    | 'categories'
+    | 'created_at'
+    | 'actions';
 
 interface ColumnOption {
     key: ColumnKey;
@@ -30,7 +39,13 @@ const allColumns: ColumnOption[] = [
     { key: 'actions', label: 'Actions' },
 ];
 
-export const defaultVisibleColumns: ColumnKey[] = ['name', 'sku', 'price', 'stock', 'actions'];
+export const defaultVisibleColumns: ColumnKey[] = [
+    'name',
+    'sku',
+    'price',
+    'stock',
+    'actions',
+];
 
 interface ColumnVisibilityDialogProps {
     open: boolean;
@@ -79,7 +94,9 @@ export function ColumnVisibilityDialog({
                             <Checkbox
                                 id={`column-${column.key}`}
                                 checked={visibleColumns.includes(column.key)}
-                                onCheckedChange={() => handleToggleColumn(column.key)}
+                                onCheckedChange={() =>
+                                    handleToggleColumn(column.key)
+                                }
                             />
                             <Label
                                 htmlFor={`column-${column.key}`}
@@ -101,10 +118,7 @@ export function ColumnVisibilityDialog({
                     >
                         Reset to Default
                     </Button>
-                    <Button
-                        type="button"
-                        onClick={() => onOpenChange(false)}
-                    >
+                    <Button type="button" onClick={() => onOpenChange(false)}>
                         Done
                     </Button>
                 </DialogFooter>
@@ -112,4 +126,3 @@ export function ColumnVisibilityDialog({
         </Dialog>
     );
 }
-

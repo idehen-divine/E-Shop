@@ -1,5 +1,5 @@
-import TextLink from '@/components/text-link';
 import { Icon } from '@/components/icon';
+import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
@@ -7,7 +7,7 @@ import AuthLayout from '@/layouts/auth-layout';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
 import { Form, Head } from '@inertiajs/react';
-import { CheckCircle2, Mail, LogOut, Send } from 'lucide-react';
+import { CheckCircle2, LogOut, Mail, Send } from 'lucide-react';
 
 export default function VerifyEmail({ status }: { status?: string }) {
     return (
@@ -75,10 +75,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                 <Separator />
 
                 <div className="text-center">
-                    <TextLink
-                        href={logout()}
-                        className="text-sm font-medium"
-                    >
+                    <TextLink href={logout()} className="text-sm font-medium">
                         <Icon
                             iconNode={LogOut}
                             className="mr-1 inline h-3 w-3"

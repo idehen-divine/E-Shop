@@ -12,4 +12,3 @@ export function ProductStatusToggle({ product }: ProductStatusToggleProps) {
         </Badge>
     );
 }
-

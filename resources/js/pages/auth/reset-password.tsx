@@ -1,9 +1,9 @@
 import { update } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
-import { Lock, Mail, KeyRound } from 'lucide-react';
+import { KeyRound, Lock, Mail } from 'lucide-react';
 
-import InputError from '@/components/input-error';
 import { Icon } from '@/components/icon';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,7 +35,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             <div className="relative">
                                 <Icon
                                     iconNode={Mail}
-                                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                    className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                 />
                                 <Input
                                     id="email"
@@ -55,7 +55,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             <div className="relative">
                                 <Icon
                                     iconNode={Lock}
-                                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                    className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                 />
                                 <Input
                                     id="password"
@@ -68,8 +68,8 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                 />
                             </div>
                             <p className="text-xs text-muted-foreground">
-                                Use at least 8 characters with a mix of
-                                letters, numbers, and symbols
+                                Use at least 8 characters with a mix of letters,
+                                numbers, and symbols
                             </p>
                             <InputError message={errors.password} />
                         </div>
@@ -81,7 +81,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             <div className="relative">
                                 <Icon
                                     iconNode={KeyRound}
-                                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                    className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                 />
                                 <Input
                                     id="password_confirmation"

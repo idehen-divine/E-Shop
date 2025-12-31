@@ -86,12 +86,12 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             </SheetTrigger>
                             <SheetContent
                                 side="left"
-                                className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar border-r"
+                                className="flex h-full w-64 flex-col items-stretch justify-between border-r bg-sidebar"
                             >
                                 <SheetTitle className="sr-only">
                                     Navigation Menu
                                 </SheetTitle>
-                                <SheetHeader className="flex justify-start text-left border-b border-sidebar-border/50 pb-4">
+                                <SheetHeader className="flex justify-start border-b border-sidebar-border/50 pb-4 text-left">
                                     <div className="flex items-center gap-2">
                                         <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
                                             <AppLogoIcon className="h-5 w-5 fill-current text-primary" />
@@ -201,7 +201,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             >
                                 <Search className="h-4 w-4 opacity-70 transition-opacity group-hover:opacity-100" />
                             </Button>
-                            <div className="hidden lg:flex gap-1">
+                            <div className="hidden gap-1 lg:flex">
                                 {rightNavItems.map((item) => (
                                     <TooltipProvider
                                         key={item.title}
@@ -213,7 +213,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     href={resolveUrl(item.href)}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                                 >
                                                     <span className="sr-only">
                                                         {item.title}
@@ -235,27 +235,30 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             </div>
                         </div>
                         {auth.user ? (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="h-9 w-9 rounded-full p-0 transition-all hover:ring-2 hover:ring-ring hover:ring-offset-2"
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className="h-9 w-9 rounded-full p-0 transition-all hover:ring-2 hover:ring-ring hover:ring-offset-2"
+                                    >
+                                        <Avatar className="h-9 w-9 overflow-hidden rounded-full ring-2 ring-background">
+                                            <AvatarImage
+                                                src={auth.user.avatar}
+                                                alt={auth.user.name}
+                                            />
+                                            <AvatarFallback className="bg-primary/10 font-medium text-primary">
+                                                {getInitials(auth.user.name)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    className="w-56 rounded-lg border shadow-lg"
+                                    align="end"
                                 >
-                                    <Avatar className="h-9 w-9 overflow-hidden rounded-full ring-2 ring-background">
-                                        <AvatarImage
-                                            src={auth.user.avatar}
-                                            alt={auth.user.name}
-                                        />
-                                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                                            {getInitials(auth.user.name)}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56 rounded-lg border shadow-lg" align="end">
-                                <UserMenuContent user={auth.user} />
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                    <UserMenuContent user={auth.user} />
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         ) : null}
                     </div>
                 </div>

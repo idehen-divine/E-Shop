@@ -3,8 +3,8 @@ import { store } from '@/routes/register';
 import { Form, Head } from '@inertiajs/react';
 import { Lock, Mail, User, UserPlus } from 'lucide-react';
 
-import InputError from '@/components/input-error';
 import { Icon } from '@/components/icon';
+import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,7 +34,7 @@ export default function Register() {
                                 <div className="relative">
                                     <Icon
                                         iconNode={User}
-                                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                        className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                     />
                                     <Input
                                         id="name"
@@ -56,7 +56,7 @@ export default function Register() {
                                 <div className="relative">
                                     <Icon
                                         iconNode={Mail}
-                                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                        className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                     />
                                     <Input
                                         id="email"
@@ -77,7 +77,7 @@ export default function Register() {
                                 <div className="relative">
                                     <Icon
                                         iconNode={Lock}
-                                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                        className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                     />
                                     <Input
                                         id="password"
@@ -104,7 +104,7 @@ export default function Register() {
                                 <div className="relative">
                                     <Icon
                                         iconNode={Lock}
-                                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                        className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                     />
                                     <Input
                                         id="password_confirmation"

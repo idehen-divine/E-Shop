@@ -1,5 +1,5 @@
-import InputError from '@/components/input-error';
 import { Icon } from '@/components/icon';
+import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type LucideIcon } from 'lucide-react';
@@ -51,7 +51,7 @@ export function FormInput({
                 {IconComponent && (
                     <Icon
                         iconNode={IconComponent}
-                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                        className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                     />
                 )}
                 <Input
@@ -77,4 +77,3 @@ export function FormInput({
         </div>
     );
 }
-

@@ -12,7 +12,13 @@ interface FormButtonProps {
     icon?: LucideIcon;
     className?: string;
     size?: 'default' | 'sm' | 'lg' | 'icon';
-    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+    variant?:
+        | 'default'
+        | 'destructive'
+        | 'outline'
+        | 'secondary'
+        | 'ghost'
+        | 'link';
     tabIndex?: number;
     'data-test'?: string;
 }
@@ -58,4 +64,3 @@ export function FormButton({
         </Button>
     );
 }
-

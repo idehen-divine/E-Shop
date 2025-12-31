@@ -27,8 +27,11 @@ export default function ProductShow({
     product?: ServiceResponse<{ product: Product }>;
     cart?: ServiceResponse<{ cart: { items: CartItem[] } }>;
 }) {
-    const productData = (product as ServiceResponse<{ product: Product }>)?.data?.product || null;
-    const cartData = (cart as ServiceResponse<{ cart: { items: CartItem[] } }>)?.data?.cart;
+    const productData =
+        (product as ServiceResponse<{ product: Product }>)?.data?.product ||
+        null;
+    const cartData = (cart as ServiceResponse<{ cart: { items: CartItem[] } }>)
+        ?.data?.cart;
 
     const cartItems = useMemo(() => {
         if (cartData?.items && Array.isArray(cartData.items)) {

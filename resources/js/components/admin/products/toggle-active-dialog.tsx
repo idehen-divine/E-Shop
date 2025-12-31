@@ -8,8 +8,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { type Product } from '@/types/products';
-import { AlertTriangle, Power } from 'lucide-react';
 import { router } from '@inertiajs/react';
+import { AlertTriangle, Power } from 'lucide-react';
 
 interface ToggleActiveDialogProps {
     open: boolean;
@@ -27,12 +27,16 @@ export function ToggleActiveDialog({
     const actionTitle = isActive ? 'Suspend Product' : 'Activate Product';
 
     const handleToggle = () => {
-        router.patch(`/admin/products/${product.id}/toggle-active`, {}, {
-            preserveScroll: true,
-            onSuccess: () => {
-                onOpenChange(false);
+        router.patch(
+            `/admin/products/${product.id}/toggle-active`,
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    onOpenChange(false);
+                },
             },
-        });
+        );
     };
 
     return (
@@ -40,11 +44,13 @@ export function ToggleActiveDialog({
             <DialogContent>
                 <DialogHeader>
                     <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                            isActive
-                                ? 'bg-yellow-500/10'
-                                : 'bg-green-500/10'
-                        }`}>
+                        <div
+                            className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                                isActive
+                                    ? 'bg-yellow-500/10'
+                                    : 'bg-green-500/10'
+                            }`}
+                        >
                             {isActive ? (
                                 <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                             ) : (
@@ -68,7 +74,8 @@ export function ToggleActiveDialog({
                         <span className="font-medium text-foreground">
                             {product.name}
                         </span>
-                        ? {isActive
+                        ?{' '}
+                        {isActive
                             ? 'The product will not be visible to customers until reactivated.'
                             : 'The product will be visible to customers again.'}
                     </p>
@@ -94,4 +101,3 @@ export function ToggleActiveDialog({
         </Dialog>
     );
 }
-

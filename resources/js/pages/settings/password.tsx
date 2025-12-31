@@ -1,5 +1,6 @@
-import InputError from '@/components/input-error';
 import { Icon } from '@/components/icon';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -8,19 +9,18 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import ShopLayout from '@/layouts/app/shop-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import { edit, update } from '@/routes/user-password';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Form, Head, usePage } from '@inertiajs/react';
-import { CheckCircle2, Lock, KeyRound } from 'lucide-react';
+import { CheckCircle2, KeyRound, Lock } from 'lucide-react';
 import { useRef } from 'react';
-import { edit, update } from '@/routes/user-password';
 
 export default function Password() {
     const passwordInput = useRef<HTMLInputElement>(null);
@@ -100,12 +100,16 @@ export default function Password() {
                                                         </Label>
                                                         <div className="relative">
                                                             <Icon
-                                                                iconNode={KeyRound}
-                                                                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                                                iconNode={
+                                                                    KeyRound
+                                                                }
+                                                                className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                                             />
                                                             <Input
                                                                 id="current_password"
-                                                                ref={currentPasswordInput}
+                                                                ref={
+                                                                    currentPasswordInput
+                                                                }
                                                                 name="current_password"
                                                                 type="password"
                                                                 className="pl-9"
@@ -127,11 +131,13 @@ export default function Password() {
                                                         <div className="relative">
                                                             <Icon
                                                                 iconNode={Lock}
-                                                                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                                                className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                                             />
                                                             <Input
                                                                 id="password"
-                                                                ref={passwordInput}
+                                                                ref={
+                                                                    passwordInput
+                                                                }
                                                                 name="password"
                                                                 type="password"
                                                                 className="pl-9"
@@ -140,11 +146,15 @@ export default function Password() {
                                                             />
                                                         </div>
                                                         <p className="text-xs text-muted-foreground">
-                                                            Use at least 8 characters with a mix of
-                                                            letters, numbers, and symbols
+                                                            Use at least 8
+                                                            characters with a
+                                                            mix of letters,
+                                                            numbers, and symbols
                                                         </p>
                                                         <InputError
-                                                            message={errors.password}
+                                                            message={
+                                                                errors.password
+                                                            }
                                                         />
                                                     </div>
 
@@ -155,7 +165,7 @@ export default function Password() {
                                                         <div className="relative">
                                                             <Icon
                                                                 iconNode={Lock}
-                                                                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                                                className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                                             />
                                                             <Input
                                                                 id="password_confirmation"
@@ -207,7 +217,8 @@ export default function Password() {
                                             </Transition>
                                         </div>
                                         <p className="text-xs text-muted-foreground">
-                                            Make sure to save your password securely
+                                            Make sure to save your password
+                                            securely
                                         </p>
                                     </CardFooter>
                                 </>

@@ -8,8 +8,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { type User } from '@/types';
-import { AlertTriangle, Power } from 'lucide-react';
 import { router } from '@inertiajs/react';
+import { AlertTriangle, Power } from 'lucide-react';
 
 interface ToggleActiveDialogProps {
     open: boolean;
@@ -27,20 +27,28 @@ export function ToggleActiveDialog({
     const isActive = user.is_active ?? true;
     const action = isActive ? 'suspend' : 'activate';
     const actionTitle = isAdmin
-        ? (isActive ? 'Suspend Admin' : 'Activate Admin')
-        : (isActive ? 'Suspend User' : 'Activate User');
+        ? isActive
+            ? 'Suspend Admin'
+            : 'Activate Admin'
+        : isActive
+          ? 'Suspend User'
+          : 'Activate User';
 
     const handleToggle = () => {
         const route = isAdmin
             ? `/admin/admins/${user.id}/toggle-active`
             : `/admin/users/${user.id}/toggle-active`;
 
-        router.patch(route, {}, {
-            preserveScroll: true,
-            onSuccess: () => {
-                onOpenChange(false);
+        router.patch(
+            route,
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    onOpenChange(false);
+                },
             },
-        });
+        );
     };
 
     return (
@@ -48,11 +56,13 @@ export function ToggleActiveDialog({
             <DialogContent>
                 <DialogHeader>
                     <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                            isActive
-                                ? 'bg-yellow-500/10'
-                                : 'bg-green-500/10'
-                        }`}>
+                        <div
+                            className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                                isActive
+                                    ? 'bg-yellow-500/10'
+                                    : 'bg-green-500/10'
+                            }`}
+                        >
                             {isActive ? (
                                 <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                             ) : (
@@ -76,7 +86,8 @@ export function ToggleActiveDialog({
                         <span className="font-medium text-foreground">
                             {user.name}
                         </span>
-                        ? {isActive
+                        ?{' '}
+                        {isActive
                             ? 'The user will not be able to access the system until reactivated.'
                             : 'The user will regain access to the system.'}
                     </p>
@@ -96,12 +107,15 @@ export function ToggleActiveDialog({
                         onClick={handleToggle}
                     >
                         {isAdmin
-                            ? (isActive ? 'Suspend Admin' : 'Activate Admin')
-                            : (isActive ? 'Suspend User' : 'Activate User')}
+                            ? isActive
+                                ? 'Suspend Admin'
+                                : 'Activate Admin'
+                            : isActive
+                              ? 'Suspend User'
+                              : 'Activate User'}
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 }
-

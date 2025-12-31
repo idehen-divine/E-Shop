@@ -82,4 +82,3 @@ export function useCartActions() {
         addingToCart,
     };
 }
-

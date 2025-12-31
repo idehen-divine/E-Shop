@@ -1,6 +1,6 @@
+import { Icon } from '@/components/icon';
 import TextLink from '@/components/text-link';
 import { Separator } from '@/components/ui/separator';
-import { Icon } from '@/components/icon';
 import { type LucideIcon } from 'lucide-react';
 
 interface AuthLinkFooterProps {
@@ -28,7 +28,11 @@ export function AuthLinkFooter({
                 {question && (
                     <span className="text-muted-foreground">{question} </span>
                 )}
-                <TextLink href={href} className="font-medium" tabIndex={tabIndex}>
+                <TextLink
+                    href={href}
+                    className="font-medium"
+                    tabIndex={tabIndex}
+                >
                     {IconComponent && (
                         <Icon
                             iconNode={IconComponent}
@@ -41,4 +45,3 @@ export function AuthLinkFooter({
         </>
     );
 }
-

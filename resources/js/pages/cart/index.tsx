@@ -31,9 +31,25 @@ interface ServiceResponse<T> {
 export default function CartIndex({
     cart,
 }: {
-    cart?: ServiceResponse<{ cart: { id: string; items?: CartItemData[]; total: string; item_count: number } }>;
+    cart?: ServiceResponse<{
+        cart: {
+            id: string;
+            items?: CartItemData[];
+            total: string;
+            item_count: number;
+        };
+    }>;
 }) {
-    const cartData = (cart as ServiceResponse<{ cart: { id: string; items?: CartItemData[]; total: string; item_count: number } }>)?.data?.cart;
+    const cartData = (
+        cart as ServiceResponse<{
+            cart: {
+                id: string;
+                items?: CartItemData[];
+                total: string;
+                item_count: number;
+            };
+        }>
+    )?.data?.cart;
     const cartItems = useMemo(() => {
         if (cartData?.items && Array.isArray(cartData.items)) {
             return cartData.items;
@@ -41,7 +57,12 @@ export default function CartIndex({
         return [];
     }, [cartData?.items]);
 
-    const finalCartData = cartData || { id: '', items: [], total: '0', item_count: 0 };
+    const finalCartData = cartData || {
+        id: '',
+        items: [],
+        total: '0',
+        item_count: 0,
+    };
     const { auth } = usePage<SharedData>().props;
     const isAuthenticated = !!auth.user;
 

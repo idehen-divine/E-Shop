@@ -61,4 +61,3 @@ export interface ProductsIndexProps {
     cartItems?: CartItem[];
     categories?: Category[];
 }
-

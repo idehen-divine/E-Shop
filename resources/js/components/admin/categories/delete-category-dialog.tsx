@@ -8,8 +8,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { type Category } from '@/types/products';
-import { AlertTriangle } from 'lucide-react';
 import { router } from '@inertiajs/react';
+import { AlertTriangle } from 'lucide-react';
 
 interface DeleteCategoryDialogProps {
     open: boolean;
@@ -56,8 +56,10 @@ export function DeleteCategoryDialog({
                         </span>
                         ? This will permanently remove the category.
                         {category.children && category.children.length > 0 && (
-                            <span className="block mt-2 text-destructive">
-                                Warning: This category has {category.children.length} subcategory(ies) that will also be affected.
+                            <span className="mt-2 block text-destructive">
+                                Warning: This category has{' '}
+                                {category.children.length} subcategory(ies) that
+                                will also be affected.
                             </span>
                         )}
                     </p>
@@ -83,5 +85,3 @@ export function DeleteCategoryDialog({
         </Dialog>
     );
 }
-
-

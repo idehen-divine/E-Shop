@@ -22,7 +22,9 @@ export function useUserFilters({
 }: UseUserFiltersProps = {}) {
     const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [sortBy, setSortBy] = useState(initialSortBy || '');
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
+        initialSortOrder,
+    );
     const [perPage, setPerPage] = useState(initialPerPage);
     const [selectedStatus, setSelectedStatus] = useState(initialStatus);
     const [selectedVerified, setSelectedVerified] = useState(initialVerified);
@@ -55,7 +57,14 @@ export function useUserFilters({
         const statusChanged = prevStatusRef.current !== selectedStatus;
         const verifiedChanged = prevVerifiedRef.current !== selectedVerified;
 
-        if (!searchChanged && !sortByChanged && !sortOrderChanged && !perPageChanged && !statusChanged && !verifiedChanged) {
+        if (
+            !searchChanged &&
+            !sortByChanged &&
+            !sortOrderChanged &&
+            !perPageChanged &&
+            !statusChanged &&
+            !verifiedChanged
+        ) {
             return;
         }
 
@@ -70,8 +79,10 @@ export function useUserFilters({
             const newSortBy = sortBy || undefined;
             const newSortOrder = newSortBy ? sortOrder : undefined;
             const newPerPage = perPage !== 10 ? String(perPage) : undefined;
-            const newStatus = selectedStatus !== 'all' ? selectedStatus : undefined;
-            const newVerified = selectedVerified !== 'all' ? selectedVerified : undefined;
+            const newStatus =
+                selectedStatus !== 'all' ? selectedStatus : undefined;
+            const newVerified =
+                selectedVerified !== 'all' ? selectedVerified : undefined;
 
             // Always include all current filter values
             if (newSearch) {
@@ -109,7 +120,13 @@ export function useUserFilters({
             prevStatusRef.current = selectedStatus;
             prevVerifiedRef.current = selectedVerified;
 
-            const onlySearchChanged = searchChanged && !sortByChanged && !sortOrderChanged && !perPageChanged && !statusChanged && !verifiedChanged;
+            const onlySearchChanged =
+                searchChanged &&
+                !sortByChanged &&
+                !sortOrderChanged &&
+                !perPageChanged &&
+                !statusChanged &&
+                !verifiedChanged;
 
             router.get(basePath, params, {
                 preserveState: onlySearchChanged,
@@ -131,7 +148,15 @@ export function useUserFilters({
                 clearTimeout(searchTimeoutRef.current);
             }
         };
-    }, [searchQuery, sortBy, sortOrder, perPage, selectedStatus, selectedVerified, basePath]);
+    }, [
+        searchQuery,
+        sortBy,
+        sortOrder,
+        perPage,
+        selectedStatus,
+        selectedVerified,
+        basePath,
+    ]);
 
     const navigateToPage = (page: number) => {
         const params: Record<string, string | undefined> = {
@@ -190,4 +215,3 @@ export function useUserFilters({
         navigateToPage,
     };
 }
-

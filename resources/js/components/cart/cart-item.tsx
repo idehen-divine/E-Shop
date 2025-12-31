@@ -1,7 +1,7 @@
+import { DeleteCartItemDialog } from '@/components/cart/delete-cart-item-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { DeleteCartItemDialog } from '@/components/cart/delete-cart-item-dialog';
 import { useCartActions } from '@/hooks/use-cart-actions';
 import products from '@/routes/products';
 import { Link } from '@inertiajs/react';
@@ -146,4 +146,3 @@ export function CartItem({
         </Card>
     );
 }
-

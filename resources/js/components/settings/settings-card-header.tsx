@@ -1,9 +1,5 @@
 import { Icon } from '@/components/icon';
-import {
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { type LucideIcon } from 'lucide-react';
 import { type ReactNode } from 'react';
 
@@ -40,4 +36,3 @@ export function SettingsCardHeader({
         </CardHeader>
     );
 }
-

@@ -92,7 +92,7 @@ export default function Login({
                                 />
                                 <Label
                                     htmlFor="remember"
-                                    className="text-sm font-normal cursor-pointer"
+                                    className="cursor-pointer text-sm font-normal"
                                 >
                                     Remember me for 30 days
                                 </Label>

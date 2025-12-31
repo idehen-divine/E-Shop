@@ -1,5 +1,6 @@
 import { Icon } from '@/components/icon';
 import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -8,7 +9,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -83,10 +83,7 @@ export default function DeleteUser() {
                             variant="destructive"
                             data-test="delete-user-button"
                         >
-                            <Icon
-                                iconNode={Trash2}
-                                className="mr-2 h-4 w-4"
-                            />
+                            <Icon iconNode={Trash2} className="mr-2 h-4 w-4" />
                             Delete account
                         </Button>
                     </DialogTrigger>

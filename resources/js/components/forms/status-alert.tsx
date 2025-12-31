@@ -1,4 +1,4 @@
-import { CheckCircle2, AlertCircle, Info, XCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Info, XCircle } from 'lucide-react';
 import { type ReactNode } from 'react';
 
 type StatusType = 'success' | 'error' | 'warning' | 'info';
@@ -52,4 +52,3 @@ export function StatusAlert({
         </div>
     );
 }
-

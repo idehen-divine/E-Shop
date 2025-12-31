@@ -36,7 +36,6 @@ export function ProductFilters({
     onStatusChange,
     onFeaturedChange,
 }: ProductFiltersProps) {
-
     return (
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="w-full flex-1 sm:max-w-xs">
@@ -52,7 +51,10 @@ export function ProductFilters({
                 </div>
             </div>
             <div className="flex gap-2">
-                <Select value={selectedCategory} onValueChange={onCategoryChange}>
+                <Select
+                    value={selectedCategory}
+                    onValueChange={onCategoryChange}
+                >
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
@@ -78,7 +80,10 @@ export function ProductFilters({
                     </SelectContent>
                 </Select>
                 {onStatusChange && (
-                    <Select value={selectedStatus} onValueChange={onStatusChange}>
+                    <Select
+                        value={selectedStatus}
+                        onValueChange={onStatusChange}
+                    >
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="All Status" />
                         </SelectTrigger>
@@ -90,14 +95,19 @@ export function ProductFilters({
                     </Select>
                 )}
                 {onFeaturedChange && (
-                    <Select value={selectedFeatured} onValueChange={onFeaturedChange}>
+                    <Select
+                        value={selectedFeatured}
+                        onValueChange={onFeaturedChange}
+                    >
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="All Featured" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">All Featured</SelectItem>
                             <SelectItem value="featured">Featured</SelectItem>
-                            <SelectItem value="not-featured">Not Featured</SelectItem>
+                            <SelectItem value="not-featured">
+                                Not Featured
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                 )}
@@ -105,4 +115,3 @@ export function ProductFilters({
         </div>
     );
 }
-

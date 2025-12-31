@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
+import { type Pagination } from '@/types/products';
 import {
     canGoToNextPage,
     canGoToPreviousPage,
     getVisiblePages,
     shouldShowEllipsis,
 } from '@/utils/pagination';
-import { type Pagination } from '@/types/products';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PaginationProps {
@@ -54,10 +54,7 @@ export function Pagination({
                             visiblePages,
                         );
                         return (
-                            <div
-                                key={page}
-                                className="flex items-center gap-1"
-                            >
+                            <div key={page} className="flex items-center gap-1">
                                 {showEllipsis && (
                                     <span className="px-2 text-sm text-muted-foreground">
                                         ...
@@ -92,4 +89,3 @@ export function Pagination({
         </div>
     );
 }
-

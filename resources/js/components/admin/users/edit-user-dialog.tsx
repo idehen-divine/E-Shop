@@ -30,7 +30,8 @@ export function EditUserDialog({
         }
     }, [open]);
 
-    const isAdmin = user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_ADMIN');
+    const isAdmin =
+        user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_ADMIN');
     const updateRoute = isAdmin
         ? `/admin/admins/${user.id}`
         : `/admin/users/${user.id}`;
@@ -39,7 +40,9 @@ export function EditUserDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>{isAdmin ? 'Edit Admin' : 'Edit User'}</DialogTitle>
+                    <DialogTitle>
+                        {isAdmin ? 'Edit Admin' : 'Edit User'}
+                    </DialogTitle>
                     <DialogDescription>
                         Update {isAdmin ? 'admin' : 'user'} information
                     </DialogDescription>
@@ -53,16 +56,14 @@ export function EditUserDialog({
                     }}
                     resetOnSuccess
                 >
-                    {({
-                        errors,
-                        processing,
-                        wasSuccessful,
-                    }) => (
+                    {({ errors, processing, wasSuccessful }) => (
                         <>
                             <div className="space-y-4 pb-6">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="edit-name">Full Name *</Label>
+                                        <Label htmlFor="edit-name">
+                                            Full Name *
+                                        </Label>
                                         <Input
                                             id="edit-name"
                                             name="name"
@@ -77,7 +78,9 @@ export function EditUserDialog({
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="edit-email">Email *</Label>
+                                        <Label htmlFor="edit-email">
+                                            Email *
+                                        </Label>
                                         <Input
                                             id="edit-email"
                                             name="email"

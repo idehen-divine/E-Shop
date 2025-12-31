@@ -24,7 +24,11 @@ export function ShopHeader() {
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="mx-auto flex h-16 items-center justify-between px-4 md:max-w-[1536px]">
-                <Link href={home()} prefetch className="flex items-center space-x-2">
+                <Link
+                    href={home()}
+                    prefetch
+                    className="flex items-center space-x-2"
+                >
                     <AppLogo />
                 </Link>
 
@@ -38,7 +42,7 @@ export function ShopHeader() {
                         <Link href={cart.index()}>
                             <ShoppingCart className="h-5 w-5" />
                             {cartCount > 0 && (
-                                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
                                     {cartCount}
                                 </span>
                             )}
@@ -68,7 +72,10 @@ export function ShopHeader() {
                                         </Avatar>
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56" align="end">
+                                <DropdownMenuContent
+                                    className="w-56"
+                                    align="end"
+                                >
                                     <UserMenuContent user={auth.user} />
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -88,4 +95,3 @@ export function ShopHeader() {
         </header>
     );
 }
-

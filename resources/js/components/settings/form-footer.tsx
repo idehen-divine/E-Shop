@@ -1,5 +1,5 @@
-import { CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { CardFooter } from '@/components/ui/card';
 import { Transition } from '@headlessui/react';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -57,4 +57,3 @@ export function FormFooter({
         </CardFooter>
     );
 }
-

@@ -8,8 +8,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { type Product } from '@/types/products';
-import { Star, StarOff } from 'lucide-react';
 import { router } from '@inertiajs/react';
+import { Star, StarOff } from 'lucide-react';
 
 interface ToggleFeaturedDialogProps {
     open: boolean;
@@ -27,12 +27,16 @@ export function ToggleFeaturedDialog({
     const actionTitle = isFeatured ? 'Unfeature Product' : 'Feature Product';
 
     const handleToggle = () => {
-        router.patch(`/admin/products/${product.id}/toggle-featured`, {}, {
-            preserveScroll: true,
-            onSuccess: () => {
-                onOpenChange(false);
+        router.patch(
+            `/admin/products/${product.id}/toggle-featured`,
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    onOpenChange(false);
+                },
             },
-        });
+        );
     };
 
     return (
@@ -40,11 +44,13 @@ export function ToggleFeaturedDialog({
             <DialogContent>
                 <DialogHeader>
                     <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                            isFeatured
-                                ? 'bg-yellow-500/10'
-                                : 'bg-blue-500/10'
-                        }`}>
+                        <div
+                            className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                                isFeatured
+                                    ? 'bg-yellow-500/10'
+                                    : 'bg-blue-500/10'
+                            }`}
+                        >
                             {isFeatured ? (
                                 <StarOff className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                             ) : (
@@ -68,7 +74,8 @@ export function ToggleFeaturedDialog({
                         <span className="font-medium text-foreground">
                             {product.name}
                         </span>
-                        ? {isFeatured
+                        ?{' '}
+                        {isFeatured
                             ? 'The product will no longer be highlighted as featured.'
                             : 'The product will be highlighted as featured and may appear in featured sections.'}
                     </p>
@@ -94,5 +101,3 @@ export function ToggleFeaturedDialog({
         </Dialog>
     );
 }
-
-

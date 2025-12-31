@@ -28,7 +28,9 @@ export function useAdminProductFilters({
     const [selectedStatus, setSelectedStatus] = useState(initialStatus);
     const [selectedFeatured, setSelectedFeatured] = useState(initialFeatured);
     const [sortBy, setSortBy] = useState(initialSortBy || '');
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
+        initialSortOrder,
+    );
     const [perPage, setPerPage] = useState(initialPerPage);
 
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -65,7 +67,16 @@ export function useAdminProductFilters({
         const sortOrderChanged = prevSortOrderRef.current !== sortOrder;
         const perPageChanged = prevPerPageRef.current !== perPage;
 
-        if (!searchChanged && !categoryChanged && !priceChanged && !statusChanged && !featuredChanged && !sortByChanged && !sortOrderChanged && !perPageChanged) {
+        if (
+            !searchChanged &&
+            !categoryChanged &&
+            !priceChanged &&
+            !statusChanged &&
+            !featuredChanged &&
+            !sortByChanged &&
+            !sortOrderChanged &&
+            !perPageChanged
+        ) {
             return;
         }
 
@@ -80,8 +91,10 @@ export function useAdminProductFilters({
             const newCategory =
                 selectedCategory !== 'all' ? selectedCategory : undefined;
             const newPrice = priceRange !== 'all' ? priceRange : undefined;
-            const newStatus = selectedStatus !== 'all' ? selectedStatus : undefined;
-            const newFeatured = selectedFeatured !== 'all' ? selectedFeatured : undefined;
+            const newStatus =
+                selectedStatus !== 'all' ? selectedStatus : undefined;
+            const newFeatured =
+                selectedFeatured !== 'all' ? selectedFeatured : undefined;
             const newSortBy = sortBy || undefined;
             const newSortOrder = newSortBy ? sortOrder : undefined;
             const newPerPage = perPage !== 10 ? String(perPage) : undefined;
@@ -139,7 +152,14 @@ export function useAdminProductFilters({
             prevSortOrderRef.current = sortOrder;
             prevPerPageRef.current = perPage;
 
-            const onlySearchChanged = searchChanged && !categoryChanged && !priceChanged && !statusChanged && !featuredChanged && !sortByChanged && !sortOrderChanged;
+            const onlySearchChanged =
+                searchChanged &&
+                !categoryChanged &&
+                !priceChanged &&
+                !statusChanged &&
+                !featuredChanged &&
+                !sortByChanged &&
+                !sortOrderChanged;
 
             router.get('/admin/products', params, {
                 preserveState: onlySearchChanged,
@@ -161,7 +181,16 @@ export function useAdminProductFilters({
                 clearTimeout(searchTimeoutRef.current);
             }
         };
-    }, [searchQuery, selectedCategory, priceRange, selectedStatus, selectedFeatured, sortBy, sortOrder, perPage]);
+    }, [
+        searchQuery,
+        selectedCategory,
+        priceRange,
+        selectedStatus,
+        selectedFeatured,
+        sortBy,
+        sortOrder,
+        perPage,
+    ]);
 
     const navigateToPage = (page: number) => {
         const params: Record<string, string | undefined> = {
@@ -230,4 +259,3 @@ export function useAdminProductFilters({
         navigateToPage,
     };
 }
-

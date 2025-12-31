@@ -9,12 +9,7 @@ import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import {
-    Palette,
-    Shield,
-    User,
-    Lock,
-} from 'lucide-react';
+import { Lock, Palette, Shield, User } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 
 interface SettingsNavItem extends NavItem {
@@ -81,8 +76,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                             'group relative h-auto w-full justify-start gap-3 px-4 py-3 transition-all duration-200',
                                             isActive &&
                                                 'bg-muted font-medium shadow-sm',
-                                            !isActive &&
-                                                'hover:bg-muted/50',
+                                            !isActive && 'hover:bg-muted/50',
                                         )}
                                     >
                                         <Link href={item.href}>
@@ -98,7 +92,9 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                                 />
                                             )}
                                             <div className="flex flex-1 flex-col items-start gap-0.5">
-                                                <span className="text-sm leading-tight">{item.title}</span>
+                                                <span className="text-sm leading-tight">
+                                                    {item.title}
+                                                </span>
                                                 {item.description && (
                                                     <span className="text-xs leading-tight text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 lg:opacity-100">
                                                         {item.description}
@@ -118,10 +114,8 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
                 <Separator className="lg:hidden" />
 
-                <div className="flex-1 min-w-0">
-                    <section className="space-y-8">
-                        {children}
-                    </section>
+                <div className="min-w-0 flex-1">
+                    <section className="space-y-8">{children}</section>
                 </div>
             </div>
         </div>

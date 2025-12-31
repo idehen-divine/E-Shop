@@ -7,11 +7,11 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { type Product } from '@/types/products';
-import { AlertTriangle } from 'lucide-react';
-import { router } from '@inertiajs/react';
-import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { type Product } from '@/types/products';
+import { router } from '@inertiajs/react';
+import { AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 
 interface DeleteProductDialogProps {
     open: boolean;
@@ -44,9 +44,10 @@ export function DeleteProductDialog({
                 toast({
                     variant: 'destructive',
                     title: 'Error',
-                    description: errorMessages.length > 0
-                        ? errorMessages.join(', ')
-                        : 'Failed to delete product. Please try again.',
+                    description:
+                        errorMessages.length > 0
+                            ? errorMessages.join(', ')
+                            : 'Failed to delete product. Please try again.',
                 });
             },
             onFinish: () => {
@@ -104,4 +105,3 @@ export function DeleteProductDialog({
         </Dialog>
     );
 }
-

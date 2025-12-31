@@ -8,8 +8,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { type Category } from '@/types/products';
-import { AlertTriangle, Power } from 'lucide-react';
 import { router } from '@inertiajs/react';
+import { AlertTriangle, Power } from 'lucide-react';
 
 interface ToggleActiveCategoryDialogProps {
     open: boolean;
@@ -27,12 +27,16 @@ export function ToggleActiveCategoryDialog({
     const actionTitle = isActive ? 'Deactivate Category' : 'Activate Category';
 
     const handleToggle = () => {
-        router.patch(`/admin/categories/${category.id}/toggle-active`, {}, {
-            preserveScroll: true,
-            onSuccess: () => {
-                onOpenChange(false);
+        router.patch(
+            `/admin/categories/${category.id}/toggle-active`,
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    onOpenChange(false);
+                },
             },
-        });
+        );
     };
 
     return (
@@ -40,11 +44,13 @@ export function ToggleActiveCategoryDialog({
             <DialogContent>
                 <DialogHeader>
                     <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                            isActive
-                                ? 'bg-yellow-500/10'
-                                : 'bg-green-500/10'
-                        }`}>
+                        <div
+                            className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                                isActive
+                                    ? 'bg-yellow-500/10'
+                                    : 'bg-green-500/10'
+                            }`}
+                        >
                             {isActive ? (
                                 <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                             ) : (
@@ -68,7 +74,8 @@ export function ToggleActiveCategoryDialog({
                         <span className="font-medium text-foreground">
                             {category.name}
                         </span>
-                        ? {isActive
+                        ?{' '}
+                        {isActive
                             ? 'The category will not be visible to customers until reactivated.'
                             : 'The category will be visible to customers again.'}
                     </p>
@@ -94,6 +101,3 @@ export function ToggleActiveCategoryDialog({
         </Dialog>
     );
 }
-
-
-

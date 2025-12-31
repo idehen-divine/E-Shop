@@ -24,7 +24,9 @@ export function useAdminCategoryFilters({
     const [selectedParent, setSelectedParent] = useState(initialParent);
     const [selectedStatus, setSelectedStatus] = useState(initialStatus);
     const [sortBy, setSortBy] = useState(initialSortBy || '');
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
+        initialSortOrder,
+    );
     const [perPage, setPerPage] = useState(initialPerPage);
 
     const isInitialMount = useRef(true);
@@ -93,7 +95,14 @@ export function useAdminCategoryFilters({
         const sortOrderChanged = prevSortOrderRef.current !== sortOrder;
         const perPageChanged = prevPerPageRef.current !== perPage;
 
-        if (!searchChanged && !parentChanged && !statusChanged && !sortByChanged && !sortOrderChanged && !perPageChanged) {
+        if (
+            !searchChanged &&
+            !parentChanged &&
+            !statusChanged &&
+            !sortByChanged &&
+            !sortOrderChanged &&
+            !perPageChanged
+        ) {
             return;
         }
 
@@ -127,7 +136,13 @@ export function useAdminCategoryFilters({
             prevPerPageRef.current = perPage;
 
             router.get(basePath, params, {
-                preserveState: searchChanged && !parentChanged && !statusChanged && !sortByChanged && !sortOrderChanged && !perPageChanged,
+                preserveState:
+                    searchChanged &&
+                    !parentChanged &&
+                    !statusChanged &&
+                    !sortByChanged &&
+                    !sortOrderChanged &&
+                    !perPageChanged,
                 preserveScroll: false,
             });
         };
@@ -143,7 +158,15 @@ export function useAdminCategoryFilters({
                 clearTimeout(searchTimeoutRef.current);
             }
         };
-    }, [searchQuery, selectedParent, selectedStatus, sortBy, sortOrder, perPage, basePath]);
+    }, [
+        searchQuery,
+        selectedParent,
+        selectedStatus,
+        sortBy,
+        sortOrder,
+        perPage,
+        basePath,
+    ]);
 
     return {
         searchQuery,
@@ -160,5 +183,3 @@ export function useAdminCategoryFilters({
         navigateToPage,
     };
 }
-
-
