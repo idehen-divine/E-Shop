@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\DailySalesReport;
+use App\Jobs\SendDailySalesReportJob;
 use App\Models\CartItem;
-use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 
 class SendDailySalesReport extends Command
 {
@@ -23,12 +21,6 @@ class SendDailySalesReport extends Command
             ->with(['product', 'cart.user'])
             ->get();
 
-        if ($salesData->isEmpty()) {
-            $this->info('No sales recorded today.');
-
-            return self::SUCCESS;
-        }
-
         $reportData = [
             'date' => $today->format('F j, Y'),
             'sales' => $salesData,
@@ -37,13 +29,13 @@ class SendDailySalesReport extends Command
             'uniqueProducts' => $salesData->unique('product_id')->count(),
         ];
 
-        $admins = User::role('SUPER_ADMIN')->get();
+        SendDailySalesReportJob::dispatch($reportData);
 
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new DailySalesReport($reportData));
+        if ($salesData->isEmpty()) {
+            $this->info('Daily sales report job dispatched (no sales recorded today).');
+        } else {
+            $this->info("Daily sales report job dispatched ({$salesData->count()} sale(s)).");
         }
-
-        $this->info("Daily sales report sent to {$admins->count()} admin(s).");
 
         return self::SUCCESS;
     }

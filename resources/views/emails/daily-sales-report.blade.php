@@ -160,14 +160,23 @@
             <div class="summary-card">
                 <h3>Total Revenue</h3>
                 <p>Rp {{ number_format($reportData['totalRevenue'], 0, ',', '.') }}</p>
+                @if ($reportData['totalRevenue'] == 0)
+                    <small style="color: #9ca3af;">No revenue today</small>
+                @endif
             </div>
             <div class="summary-card">
                 <h3>Items Sold</h3>
                 <p>{{ $reportData['totalItems'] }}</p>
+                @if ($reportData['totalItems'] == 0)
+                    <small style="color: #9ca3af;">No items sold</small>
+                @endif
             </div>
             <div class="summary-card">
                 <h3>Unique Products</h3>
                 <p>{{ $reportData['uniqueProducts'] }}</p>
+                @if ($reportData['uniqueProducts'] == 0)
+                    <small style="color: #9ca3af;">No products sold</small>
+                @endif
             </div>
         </div>
 
@@ -203,7 +212,10 @@
                 </table>
             @else
                 <div class="no-sales">
-                    <p>No sales recorded for this period.</p>
+                    <h3 style="color: #6b7280; font-weight: 600;">📭 No Sales Today</h3>
+                    <p style="margin-top: 10px;">No sales were recorded for {{ $reportData['date'] }}.</p>
+                    <p style="margin-top: 5px; font-size: 0.875rem;">This daily report confirms your sales tracking
+                        system is working correctly.</p>
                 </div>
             @endif
         </div>

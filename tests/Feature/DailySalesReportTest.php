@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\DailySalesReport;
+use App\Jobs\SendDailySalesReportJob;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
@@ -10,7 +10,7 @@ use App\Models\ProductCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class DailySalesReportTest extends TestCase
@@ -31,7 +31,7 @@ class DailySalesReportTest extends TestCase
 
     public function test_daily_sales_report_is_sent_with_sales_data(): void
     {
-        Mail::fake();
+        Queue::fake();
 
         $category = ProductCategory::create([
             'name' => 'Test Category',
@@ -75,23 +75,28 @@ class DailySalesReportTest extends TestCase
 
         Artisan::call('sales:send-daily-report');
 
-        Mail::assertQueued(DailySalesReport::class, function ($mail) {
-            return $mail->hasTo($this->admin->email);
+        Queue::assertPushed(SendDailySalesReportJob::class, function ($job) {
+            return $job->reportData['totalItems'] == 5
+                && $job->reportData['uniqueProducts'] == 2;
         });
     }
 
-    public function test_daily_sales_report_not_sent_when_no_sales(): void
+    public function test_daily_sales_report_sent_even_when_no_sales(): void
     {
-        Mail::fake();
+        Queue::fake();
 
         Artisan::call('sales:send-daily-report');
 
-        Mail::assertNothingQueued();
+        Queue::assertPushed(SendDailySalesReportJob::class, function ($job) {
+            return $job->reportData['totalItems'] == 0
+                && $job->reportData['totalRevenue'] == 0
+                && $job->reportData['uniqueProducts'] == 0;
+        });
     }
 
     public function test_daily_sales_report_only_includes_today_sales(): void
     {
-        Mail::fake();
+        Queue::fake();
 
         $category = ProductCategory::create([
             'name' => 'Test Category',
@@ -119,17 +124,15 @@ class DailySalesReportTest extends TestCase
 
         Artisan::call('sales:send-daily-report');
 
-        Mail::assertQueued(DailySalesReport::class);
-
-        Mail::assertQueued(DailySalesReport::class, function ($mail) {
-            return $mail->reportData['sales']->count() === 1
-                && $mail->reportData['totalItems'] == 3;
+        Queue::assertPushed(SendDailySalesReportJob::class, function ($job) {
+            return $job->reportData['sales']->count() === 1
+                && $job->reportData['totalItems'] == 3;
         });
     }
 
     public function test_daily_sales_report_calculates_correct_totals(): void
     {
-        Mail::fake();
+        Queue::fake();
 
         $category = ProductCategory::create([
             'name' => 'Test Category',
@@ -173,12 +176,12 @@ class DailySalesReportTest extends TestCase
 
         Artisan::call('sales:send-daily-report');
 
-        Mail::assertQueued(DailySalesReport::class, function ($mail) {
+        Queue::assertPushed(SendDailySalesReportJob::class, function ($job) {
             $expectedRevenue = (2 * 10000) + (3 * 20000);
 
-            return $mail->reportData['totalRevenue'] == $expectedRevenue
-                && $mail->reportData['totalItems'] == 5
-                && $mail->reportData['uniqueProducts'] == 2;
+            return $job->reportData['totalRevenue'] == $expectedRevenue
+                && $job->reportData['totalItems'] == 5
+                && $job->reportData['uniqueProducts'] == 2;
         });
     }
 }

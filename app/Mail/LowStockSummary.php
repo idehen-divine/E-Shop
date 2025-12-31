@@ -3,30 +3,32 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class DailySalesReport extends Mailable
+class LowStockSummary extends Mailable
 {
     use Queueable, SerializesModels;
 
     public function __construct(
-        public array $reportData
+        public Collection $products,
+        public int $threshold
     ) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Daily Sales Report - '.$this->reportData['date'],
+            subject: 'Low Stock Summary - '.count($this->products).' Products',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.daily-sales-report',
+            view: 'emails.low-stock-summary',
         );
     }
 
