@@ -123,4 +123,64 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
             }
         });
     }
+
+    /**
+     * Get dashboard statistics for products
+     */
+    public function getDashboardStats(): array
+    {
+        return [
+            'total' => $this->model->count(),
+            'active' => $this->model->where('is_active', true)->count(),
+            'lowStock' => $this->model->where('stock', '<', 10)->where('is_active', true)->count(),
+            'outOfStock' => $this->model->where('stock', '<=', 0)->count(),
+        ];
+    }
+
+    /**
+     * Get recent products
+     */
+    public function getRecentProducts(int $limit = 5): array
+    {
+        return $this->model
+            ->with('categories')
+            ->latest()
+            ->take($limit)
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'stock' => $product->stock,
+                    'is_active' => $product->is_active,
+                    'is_featured' => $product->is_featured,
+                    'categories' => $product->categories->pluck('name')->toArray(),
+                    'created_at' => $product->created_at->format('M d, Y'),
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Get low stock products
+     */
+    public function getLowStockProducts(int $limit = 5): array
+    {
+        return $this->model
+            ->where('stock', '<', 10)
+            ->where('is_active', true)
+            ->orderBy('stock', 'asc')
+            ->take($limit)
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'stock' => $product->stock,
+                    'sku' => $product->sku,
+                ];
+            })
+            ->toArray();
+    }
 }

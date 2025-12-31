@@ -146,4 +146,43 @@ class UserRepositoryImplement extends Eloquent implements UserRepository
 
         return $user;
     }
+
+    /**
+     * Get dashboard statistics for users
+     */
+    public function getDashboardStats(): array
+    {
+        return [
+            'total' => $this->model->whereHas('roles', function ($query) {
+                $query->where('name', 'USER');
+            })->count(),
+            'active' => $this->model->whereHas('roles', function ($query) {
+                $query->where('name', 'USER');
+            })->where('is_active', true)->count(),
+        ];
+    }
+
+    /**
+     * Get recent users
+     */
+    public function getRecentUsers(int $limit = 5): array
+    {
+        return $this->model
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'USER');
+            })
+            ->latest()
+            ->take($limit)
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'is_active' => $user->is_active,
+                    'created_at' => $user->created_at->format('M d, Y'),
+                ];
+            })
+            ->toArray();
+    }
 }

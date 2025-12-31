@@ -25,4 +25,6 @@ interface CartRepository extends Repository
     public function migrateCartItems($fromCartId, $toCartId);
 
     public function updateCartSessionId($cartId, $sessionId);
+
+    public function getDashboardStats(): array;
 }

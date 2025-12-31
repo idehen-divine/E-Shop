@@ -235,4 +235,15 @@ class CartRepositoryImplement extends Eloquent implements CartRepository
 
         return $cart->save();
     }
+
+    /**
+     * Get dashboard statistics for carts
+     */
+    public function getDashboardStats(): array
+    {
+        return [
+            'total' => $this->model->count(),
+            'active' => $this->model->whereHas('items')->count(),
+        ];
+    }
 }

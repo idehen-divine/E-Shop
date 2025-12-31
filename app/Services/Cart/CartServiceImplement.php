@@ -239,4 +239,24 @@ class CartServiceImplement extends ServiceApi implements CartService
                 ->setError($e->getMessage());
         }
     }
+
+    /**
+     * Get dashboard data for carts
+     */
+    public function getDashboardData(): CartServiceImplement
+    {
+        try {
+            $stats = $this->mainRepository->getDashboardStats();
+
+            return $this->setCode(200)
+                ->setMessage('Cart dashboard data retrieved successfully')
+                ->setData([
+                    'stats' => $stats,
+                ]);
+        } catch (\Exception $e) {
+            return $this->setCode(500)
+                ->setMessage('An error occurred while retrieving cart dashboard data')
+                ->setError($e->getMessage());
+        }
+    }
 }

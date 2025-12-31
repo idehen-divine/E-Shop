@@ -19,4 +19,6 @@ interface UserService extends BaseService
     public function updateUser(string $id, array $data);
 
     public function updateAdmin(string $id, array $data);
+
+    public function getDashboardData();
 }

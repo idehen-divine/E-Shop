@@ -56,4 +56,14 @@ class ProductCategoryRepositoryImplement extends Eloquent implements ProductCate
             }
         });
     }
+
+    /**
+     * Get dashboard statistics for categories
+     */
+    public function getDashboardStats(): array
+    {
+        return [
+            'total' => $this->model->count(),
+        ];
+    }
 }

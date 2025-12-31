@@ -161,4 +161,24 @@ class ProductCategoryServiceImplement extends ServiceApi implements ProductCateg
                 ->setError($e->getMessage());
         }
     }
+
+    /**
+     * Get dashboard data for categories
+     */
+    public function getDashboardData(): ProductCategoryServiceImplement
+    {
+        try {
+            $stats = $this->mainRepository->getDashboardStats();
+
+            return $this->setCode(200)
+                ->setMessage('Category dashboard data retrieved successfully')
+                ->setData([
+                    'stats' => $stats,
+                ]);
+        } catch (\Exception $e) {
+            return $this->setCode(500)
+                ->setMessage('An error occurred while retrieving category dashboard data')
+                ->setError($e->getMessage());
+        }
+    }
 }

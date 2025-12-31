@@ -23,4 +23,6 @@ interface ProductService extends BaseService
     public function toggleProductActive($id);
 
     public function toggleProductFeatured($id);
+
+    public function getDashboardData();
 }

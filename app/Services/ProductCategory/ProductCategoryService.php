@@ -15,4 +15,6 @@ interface ProductCategoryService extends BaseService
     public function updateCategory($request, $id);
 
     public function deleteCategory($id);
+
+    public function getDashboardData();
 }

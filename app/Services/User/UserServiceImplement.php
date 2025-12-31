@@ -291,4 +291,26 @@ class UserServiceImplement extends ServiceApi implements UserService
 
         return in_array('ADMIN', $userRoles) || in_array('SUPER_ADMIN', $userRoles);
     }
+
+    /**
+     * Get dashboard data for users
+     */
+    public function getDashboardData(): UserServiceImplement
+    {
+        try {
+            $stats = $this->mainRepository->getDashboardStats();
+            $recentUsers = $this->mainRepository->getRecentUsers(5);
+
+            return $this->setCode(200)
+                ->setMessage('User dashboard data retrieved successfully')
+                ->setData([
+                    'stats' => $stats,
+                    'recentUsers' => $recentUsers,
+                ]);
+        } catch (\Exception $e) {
+            return $this->setCode(500)
+                ->setMessage('An error occurred while retrieving user dashboard data')
+                ->setError($e->getMessage());
+        }
+    }
 }

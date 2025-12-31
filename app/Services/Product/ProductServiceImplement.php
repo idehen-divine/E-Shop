@@ -396,4 +396,28 @@ class ProductServiceImplement extends ServiceApi implements ProductService
                 ->setError($e->getMessage());
         }
     }
+
+    /**
+     * Get dashboard data for products
+     */
+    public function getDashboardData(): ProductServiceImplement
+    {
+        try {
+            $stats = $this->mainRepository->getDashboardStats();
+            $recentProducts = $this->mainRepository->getRecentProducts(5);
+            $lowStockProducts = $this->mainRepository->getLowStockProducts(5);
+
+            return $this->setCode(200)
+                ->setMessage('Product dashboard data retrieved successfully')
+                ->setData([
+                    'stats' => $stats,
+                    'recentProducts' => $recentProducts,
+                    'lowStockProducts' => $lowStockProducts,
+                ]);
+        } catch (\Exception $e) {
+            return $this->setCode(500)
+                ->setMessage('An error occurred while retrieving product dashboard data')
+                ->setError($e->getMessage());
+        }
+    }
 }

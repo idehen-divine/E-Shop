@@ -14,4 +14,8 @@ interface UserRepository extends Repository
     public function getAvailableRoles(array $excludedRoles = []);
 
     public function createAdmin(array $data): User;
+
+    public function getDashboardStats(): array;
+
+    public function getRecentUsers(int $limit = 5): array;
 }

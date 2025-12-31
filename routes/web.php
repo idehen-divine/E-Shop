@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -18,9 +18,7 @@ Route::delete('/cart/{cartItemId}', [CartController::class, 'destroy'])->name('c
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('admin/products', [ProductController::class, 'admin'])->name('admin.products.index');
     Route::post('admin/products', [ProductController::class, 'store'])->name('admin.products.store');

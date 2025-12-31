@@ -17,4 +17,6 @@ interface CartService extends BaseService
     public function clearCartForUser($request);
 
     public function migrateCart($request);
+
+    public function getDashboardData();
 }
